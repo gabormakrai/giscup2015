@@ -8,6 +8,10 @@
 #ifndef ROADSTORE_H_
 #define ROADSTORE_H_
 
+#define _DEBUG_
+
+#include "NodeStore.h"
+
 class RoadStore {
 public:
 	int* edgeId;
@@ -20,6 +24,7 @@ public:
 	RoadStore(int initialStoreSize);
 	void addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit);
 	void dispose();
+	void reassignNodeIds(NodeStore* nodeStore);
 };
 
 

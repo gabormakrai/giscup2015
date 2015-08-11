@@ -7,6 +7,11 @@
 
 #include "RoadStore.h"
 
+#ifdef _DEBUG_
+#include <iostream>
+using namespace std;
+#endif
+
 RoadStore::RoadStore(int initialStoreSize) {
 	edgeId = new int[initialStoreSize];
 	startNode = new int[initialStoreSize];
@@ -65,3 +70,21 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 
 	++size;
 }
+
+void RoadStore::reassignNodeIds(NodeStore* nodeStore) {
+	for (int i = 0; i < this->size; ++i) {
+		int startNodeIndex = nodeStore->getIndex(this->startNode[i]);
+		this->startNode[i] = startNodeIndex;
+		int endNodeIndex = nodeStore->getIndex(this->endNode[i]);
+		this->endNode[i] = endNodeIndex;
+#ifdef _DEBUG_
+		if (startNodeIndex == -1) {
+			cout << "problem...";
+		}
+		if (endNodeIndex == -1) {
+			cout << "poroblem...";
+		}
+#endif
+	}
+}
+

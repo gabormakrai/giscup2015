@@ -43,7 +43,7 @@ int main() {
 	nodeStore->sort();
 
 	// use new ids in roadStore
-	// roadStore->reassignNodeIds(nodeStore);
+	roadStore->reassignNodeIds(nodeStore);
 
 	// dispose roadStore
 	roadStore->dispose();

@@ -134,3 +134,30 @@ void quickSort(int* id, int left, int right, double* x, double* y) {
 void NodeStore::sort() {
 	quickSort(this->id, 0, this->size - 1, this->x, this->y);
 }
+
+int binarySearch(int* id, int first, int last, int element) {
+	if (first > last) {
+		return -1;
+	}
+
+	int index;
+
+	int mid = (first + last) / 2;
+
+	if (element == id[mid]) {
+		index = mid;
+	} else {
+		if (element < id[mid]) {
+			index = binarySearch(id, first, mid - 1, element);
+		} else {
+			index = binarySearch(id, mid + 1, last, element);
+		}
+	}
+
+	return index;
+}
+
+int NodeStore::getIndex(int id) {
+	return binarySearch(this->id, 0, this->size - 1, id);
+}
+
