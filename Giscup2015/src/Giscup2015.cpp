@@ -35,6 +35,10 @@ int main() {
 	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
 	cout << "#road: " << roadStore->size << endl;
 
+//	for (int i = 0; i < roadStore->size; ++i) {
+//		cout << "id: " << roadStore->edgeId[i] << ", sNode: " << roadStore->startNode[i] << ", eNode: " << roadStore->endNode[i] << ", length: " << roadStore->length[i] << ", sLimit: " << roadStore->speedLimit[i] << endl;
+//	}
+
 	// reassign id for nodes
 	nodeStore->sort();
 

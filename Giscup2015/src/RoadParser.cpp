@@ -83,9 +83,11 @@ void RoadParser::loadRoadFile(const char* fileName, unsigned char* buffer, int b
 
 	int var1 = 0;
 
-	unsigned char edgeIdChar[32];
-	unsigned char startNodeIdChar[32];
-	unsigned char endNodeIdChar[32];
+	char edgeIdChar[32];
+	char startNodeIdChar[32];
+	char endNodeIdChar[32];
+	char lengthChar[32];
+	char speedLimitChar[32];
 
 	while (!feof(source)) {
 		int readedBytes = fread(buffer, 1, bufferSize, source);
@@ -111,21 +113,32 @@ void RoadParser::loadRoadFile(const char* fileName, unsigned char* buffer, int b
 				endNodeIdChar[var1] = 0;
 				var1 = 0;
 				state = 3;
-			} else if (state == 3 && buffer[i] == 10) {
+			} else if (state == 3 && buffer[i] != ':') {
+				lengthChar[var1] = buffer[i];
+				++var1;
+			} else if (state == 3) {
+				lengthChar[var1] = 0;
+				var1 = 0;
+				state = 4;
+			} else if (state == 4 && buffer[i] != ':') {
+				speedLimitChar[var1] = buffer[i];
+				++var1;
+			} else if (state == 4) {
+				speedLimitChar[var1] = 0;
+				var1 = 0;
+				state = 5;
+			} else if (state == 5 && buffer[i] == 10) {
 				state = 0;
 				var1 = 0;
-
-// TODO: do the conversion...
-
-				roadStore->addRoad(0, 0, 0, 0.0, 0.0);
+				int id = atoi(edgeIdChar);
+				int startNodeId = atoi(startNodeIdChar);
+				int endNodeId = atoi(endNodeIdChar);
+				double length = atof(lengthChar);
+				double speedLimit = atof(speedLimitChar);
+				roadStore->addRoad(id, startNodeId, endNodeId, length, speedLimit);
 			}
 		}
 	}
-
-#ifdef _DEBUG_
-	cout << "roadStore->size: " << roadStore->size << endl;
-#endif
-
 
 	fclose(source);
 
