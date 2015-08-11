@@ -11,11 +11,14 @@
 #define _DEBUG_
 
 #include <fstream>
+#include <stdlib.h>
 #include "RoadStore.h"
+#include "NodeStore.h"
 
 class RoadParser {
 public:
-	void loadFile(const char* fileName, unsigned char* buffer, int bufferSize, RoadStore* roadStore);
+	void loadRoadFile(const char* fileName, unsigned char* buffer, int bufferSize, RoadStore* roadStore);
+	void loadNodeFile(const char* fileName, unsigned char* buffer, int bufferSize, NodeStore* nodeStore);
 };
 
 #endif /* ROADPARSER_H_ */
