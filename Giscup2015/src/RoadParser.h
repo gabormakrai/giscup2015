@@ -8,8 +8,6 @@
 #ifndef ROADPARSER_H_
 #define ROADPARSER_H_
 
-#define _DEBUG_
-
 #include <fstream>
 #include <stdlib.h>
 #include "RoadStore.h"

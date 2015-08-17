@@ -8,8 +8,6 @@
 #ifndef NODESTORE_H_
 #define NODESTORE_H_
 
-#define _DEBUG_
-
 #include <stdlib.h>
 
 class NodeStore {

@@ -8,8 +8,6 @@
 #ifndef ROADSTORE_H_
 #define ROADSTORE_H_
 
-#define _DEBUG_
-
 #include "NodeStore.h"
 
 class RoadStore {
