@@ -24,6 +24,7 @@ public:
 	void addNode(int id, double x, double y);
 	void sort();
 	int getIndex(int id);
+	double distance(int i1, int i2);
 };
 
 #endif /* NODESTORE_H_ */

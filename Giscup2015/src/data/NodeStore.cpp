@@ -6,6 +6,7 @@
  */
 
 #include "NodeStore.h"
+#include "math.h"
 
 #ifdef _DEBUG_
 #include <iostream>
@@ -159,5 +160,11 @@ int binarySearch(int* id, int first, int last, int element) {
 
 int NodeStore::getIndex(int id) {
 	return binarySearch(this->id, 0, this->size - 1, id);
+}
+
+double NodeStore::distance(int i1, int i2) {
+	double dx = x[i1] - x[i2];
+	double dy = y[i1] - y[i2];
+	return sqrt(dx * dx + dy * dy);
 }
 
