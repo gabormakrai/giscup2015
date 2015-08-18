@@ -98,7 +98,7 @@ void RoadStore::reassignNodeIds(NodeStore* nodeStore) {
 			cout << "problem...";
 		}
 		if (endNodeIndex == -1) {
-			cout << "poroblem...";
+			cout << "problem...";
 		}
 #endif
 	}
