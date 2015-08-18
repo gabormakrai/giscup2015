@@ -12,16 +12,17 @@
 #include "data/RoadStore.h"
 #include "data/NodeStore.h"
 #include "data/NeighbourDataBase.h"
+
 #include "sp/ShortestPathAlgorithm.h"
+#include "sp/AStarBinaryHeap.h"
+
 #include <time.h>
 #include <sys/time.h>
 
 #include <iostream>
 using namespace std;
 
-#ifndef BUFFER_SIZE
 #define BUFFER_SIZE 16384
-#endif
 
 int main() {
 	struct timeval startDataRead;
@@ -90,6 +91,13 @@ int main() {
 //		cout << "outEdge[" << i << "] = " << outEdge[i] << endl;
 //	}
 
+//	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(1), nodeStore->getIndex(3)) << endl;
+//	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(3), nodeStore->getIndex(4)) << endl;
+//	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(8), nodeStore->getIndex(9)) << endl;
+
+	AStarBinaryHeap* algo = new AStarBinaryHeap(neighbourDataBase, nodeStore, roadStore);
+	algo->shortestPath(1, 10);
+
 	gettimeofday(&endAlgo, NULL);
 
 //	// dispose arrays
@@ -97,6 +105,8 @@ int main() {
 //	delete [] outDegree;
 //	delete [] inEdge;
 //	delete [] outEdge;
+
+	delete algo;
 
 	// dispose roadStore
 	delete roadStore;
