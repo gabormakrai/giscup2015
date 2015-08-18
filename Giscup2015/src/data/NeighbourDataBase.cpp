@@ -13,7 +13,6 @@ using namespace std;
 #endif
 
 NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore) {
-
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[roadStore->storeSize];
@@ -28,7 +27,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore)
 		++this->count[roadStore->startNode[i]];
 	}
 
-	for (int i = 1; i < roadStore->size; ++i) {
+	for (int i = 1; i < nodeStore->size; ++i) {
 		this->offset[i] = this->offset[i-1] + this->count[i-1];
 	}
 
