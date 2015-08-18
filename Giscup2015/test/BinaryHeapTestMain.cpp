@@ -15,7 +15,7 @@ using namespace std;
 
 #include "../src/datastructure/BinaryHeap.h"
 
-int main() {
+int mainBinaryHeapTest() {
 	cout << "BinaryHeapTesting<double>..." << endl;
 	BinaryHeap<double>* heap = new BinaryHeap<double>(32, 0.0, std::numeric_limits<double>::max());
 	heap->init(0);
@@ -46,5 +46,7 @@ int main() {
 	cout << heap->extractMin() << endl;
 	cout << heap->extractMin() << endl;
 	cout << heap->extractMin() << endl;
+
+	return 0;
 }
 
