@@ -20,7 +20,7 @@ public:
 	int* nodeArray;
 	BinaryHeap(int initialSize, T zeroValue, T maxValue);
 	~BinaryHeap();
-	void init(int sourceNode);
+	void init(int sourceNode, T sourceValue);
 	int extractMin();
 	void decreaseKey(int node, T value);
 private:

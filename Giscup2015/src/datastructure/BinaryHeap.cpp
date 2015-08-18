@@ -31,14 +31,14 @@ BinaryHeap<T>::~BinaryHeap() {
 }
 
 template <class T>
-void BinaryHeap<T>::init(int sourceNode) {
+void BinaryHeap<T>::init(int sourceNode, T sourceValue) {
     for (int i = 0; i < this->heapSize; ++i) {
     	this->lookupTable[i] = -1;
         this->valueArray[i] = this->maxValue;
         this->nodeArray[i] = -1;
     }
 
-    this->valueArray[0] = this->zeroValue;
+    this->valueArray[0] = sourceValue;
     this->nodeArray[0] = sourceNode;
     this->lookupTable[sourceNode] = 0;
     size = 1;

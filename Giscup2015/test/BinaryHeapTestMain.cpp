@@ -18,7 +18,7 @@ using namespace std;
 int mainBinaryHeapTest() {
 	cout << "BinaryHeapTesting<double>..." << endl;
 	BinaryHeap<double>* heap = new BinaryHeap<double>(32, 0.0, std::numeric_limits<double>::max());
-	heap->init(0);
+	heap->init(0, 1.0);
 	heap->decreaseKey(3, 10);
 	heap->decreaseKey(4, 11);
 	heap->decreaseKey(5, 13);
@@ -33,7 +33,7 @@ int mainBinaryHeapTest() {
 
 	cout << endl;
 
-	heap->init(0);
+	heap->init(0, 2.0);
 	heap->decreaseKey(3, 10);
 	heap->decreaseKey(4, 11);
 	heap->decreaseKey(5, 13);
