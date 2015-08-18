@@ -18,7 +18,7 @@ public:
 	int* offset;
 	double* weight;
 	NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore);
-	void dispose();
+	~NeighbourDataBase();
 };
 
 

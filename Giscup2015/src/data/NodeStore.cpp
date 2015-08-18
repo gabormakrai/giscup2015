@@ -20,7 +20,7 @@ NodeStore::NodeStore(int initialStoreSize) {
 	storeSize = initialStoreSize;
 }
 
-void NodeStore::dispose() {
+NodeStore::~NodeStore() {
 	delete [] x;
 	delete [] y;
 	delete [] id;

@@ -42,12 +42,12 @@ int main() {
 	RoadParser roadParser;
 
 	// loading data from files
-	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
-	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
+	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
+	roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
 	cout << "#node: " << nodeStore->size << endl;
 
-	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
-	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
 	cout << "#road: " << roadStore->size << endl;
 
 	gettimeofday(&endDataRead, NULL);
@@ -99,15 +99,12 @@ int main() {
 //	delete [] outEdge;
 
 	// dispose roadStore
-	roadStore->dispose();
 	delete roadStore;
 
 	// dispose nodeStore
-	nodeStore->dispose();
 	delete nodeStore;
 
 	// dispose neighbourDB
-	neighbourDataBase->dispose();
 	delete neighbourDataBase;
 
 	delete [] buffer;

@@ -58,7 +58,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore)
 #endif
 }
 
-void NeighbourDataBase::dispose() {
+NeighbourDataBase::~NeighbourDataBase() {
 	delete [] count;
 	delete [] offset;
 	delete [] id;

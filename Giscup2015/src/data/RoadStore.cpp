@@ -22,7 +22,7 @@ RoadStore::RoadStore(int initialStoreSize) {
 	storeSize = initialStoreSize;
 }
 
-void RoadStore::dispose() {
+RoadStore::~RoadStore() {
 	delete [] edgeId;
 	delete [] startNode;
 	delete [] endNode;

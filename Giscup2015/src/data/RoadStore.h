@@ -20,8 +20,8 @@ public:
 	int storeSize;
 	int size;
 	RoadStore(int initialStoreSize);
+	~RoadStore();
 	void addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit);
-	void dispose();
 	void reassignNodeIds(NodeStore* nodeStore);
 };
 

@@ -20,8 +20,8 @@ public:
 	int size;
 	int storeSize;
 	NodeStore(int initialStoreSize);
+	~NodeStore();
 	void addNode(int id, double x, double y);
-	void dispose();
 	void sort();
 	int getIndex(int id);
 };
