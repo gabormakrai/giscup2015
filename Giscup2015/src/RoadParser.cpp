@@ -64,7 +64,9 @@ void RoadParser::loadNodeFile(const char* fileName, unsigned char* buffer, int b
 				double y = atof(nodeYChar);
 
 				nodeStore->addNode(id, x, y);
-
+#ifdef _DEBUG_
+				cout << "RoadParser: adding new node(id:" << id << ",x:" << x << ",y:" << y << ")" << endl;
+#endif
 				var1 = 0;
 				state = 0;
 			}
@@ -136,6 +138,9 @@ void RoadParser::loadRoadFile(const char* fileName, unsigned char* buffer, int b
 				double length = atof(lengthChar);
 				double speedLimit = atof(speedLimitChar);
 				roadStore->addRoad(id, startNodeId, endNodeId, length, speedLimit);
+#ifdef _DEBUG_
+				cout << "RoadParser: adding new road(id:" << id << ",startNode:" << startNodeId << ",endNodeId:" << endNodeId << ",length:" << length << ",speedLimit:" << speedLimit << ")" << endl;
+#endif
 			}
 		}
 	}

@@ -73,9 +73,25 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 
 void RoadStore::reassignNodeIds(NodeStore* nodeStore) {
 	for (int i = 0; i < this->size; ++i) {
+
+#ifdef _DEBUG_
+		cout << "RoadStore: reassignNodeIds: Road(index:" << i << ",id" << this->edgeId[i] << ",sNode" << this->startNode[i] << ",eNode:" << this->endNode[i] << ") has new ids: ";
+#endif
+
 		int startNodeIndex = nodeStore->getIndex(this->startNode[i]);
+
+#ifdef _DEBUG_
+		cout << "sNode(" << startNodeIndex << "),";
+#endif
+
 		this->startNode[i] = startNodeIndex;
+
 		int endNodeIndex = nodeStore->getIndex(this->endNode[i]);
+
+#ifdef _DEBUG_
+		cout << "eNode(" << endNodeIndex << ")" << endl;
+#endif
+
 		this->endNode[i] = endNodeIndex;
 #ifdef _DEBUG_
 		if (startNodeIndex == -1) {

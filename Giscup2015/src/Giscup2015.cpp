@@ -6,9 +6,12 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
+//#define _DEBUG_
+
 #include "RoadParser.h"
 #include "RoadStore.h"
 #include "NodeStore.h"
+#include "NeighbourDataBase.h"
 #include <time.h>
 #include <sys/time.h>
 
@@ -38,11 +41,13 @@ int main() {
 	RoadParser roadParser;
 
 	// loading data from files
-	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
-//	cout << "#node: " << nodeStore->size << endl;
+	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
+	roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
+	cout << "#node: " << nodeStore->size << endl;
 
-	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
-//	cout << "#road: " << roadStore->size << endl;
+	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	cout << "#road: " << roadStore->size << endl;
 
 	gettimeofday(&endDataRead, NULL);
 
@@ -54,38 +59,43 @@ int main() {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
-	int* inDegree = new int[nodeStore->storeSize];
-	int* outDegree = new int[nodeStore->storeSize];
-	int* inEdge = new int[nodeStore->storeSize];
-	int* outEdge = new int[nodeStore->storeSize];
+	// create neighbourdatabase
+	NeighbourDataBase* neighbourDataBase = new NeighbourDataBase(nodeStore, roadStore);
 
-	for (int i = 0; i < nodeStore->size; ++i) {
-		inDegree[i] = 0;
-		outDegree[i] = 0;
-	}
-
-	for (int i = 0; i < roadStore->size; ++i) {
-		++outDegree[roadStore->startNode[i]];
-		++inDegree[roadStore->endNode[i]];
-		inEdge[roadStore->endNode[i]] = i;
-		outEdge[roadStore->startNode[i]] = i;
-	}
-	int asd = 0;
-	for (int i = 0; i < nodeStore->size; ++i) {
-		if (inDegree[i] == 1 && outDegree[i] == 1) {
-//			cout << "node: " << i << endl;
-			++asd;
-		}
-	}
-//	cout << "asd: " << asd << endl;
+//	int* inDegree = new int[nodeStore->storeSize];
+//	int* outDegree = new int[nodeStore->storeSize];
+//	int* inEdge = new int[nodeStore->storeSize];
+//	int* outEdge = new int[nodeStore->storeSize];
+//
+//	for (int i = 0; i < nodeStore->size; ++i) {
+//		inDegree[i] = 0;
+//		outDegree[i] = 0;
+//		inEdge[i] = -1;
+//		outEdge[i] = -1;
+//	}
+//
+//	for (int i = 0; i < roadStore->size; ++i) {
+//		++outDegree[roadStore->startNode[i]];
+//		++inDegree[roadStore->endNode[i]];
+//		inEdge[roadStore->endNode[i]] = i;
+//		outEdge[roadStore->startNode[i]] = i;
+//	}
+//
+//	for (int i = 0; i < nodeStore->size; ++i) {
+//		cout << "id[" << i << "] = " << nodeStore->id[i] << endl;
+//		cout << "outDegree[" << i << "] = " << outDegree[i] << endl;
+//		cout << "inDegree[" << i << "] = " << inDegree[i] << endl;
+//		cout << "inEdge[" << i << "] = " << inEdge[i] << endl;
+//		cout << "outEdge[" << i << "] = " << outEdge[i] << endl;
+//	}
 
 	gettimeofday(&endAlgo, NULL);
 
-	// dispose arrays
-	delete [] inDegree;
-	delete [] outDegree;
-	delete [] inEdge;
-	delete [] outEdge;
+//	// dispose arrays
+//	delete [] inDegree;
+//	delete [] outDegree;
+//	delete [] inEdge;
+//	delete [] outEdge;
 
 	// dispose roadStore
 	roadStore->dispose();
@@ -95,14 +105,14 @@ int main() {
 	nodeStore->dispose();
 	delete nodeStore;
 
+	// dispose neighbourDB
+	neighbourDataBase->dispose();
+	delete neighbourDataBase;
+
 	delete [] buffer;
 
 	cout << (endDataRead.tv_sec - startDataRead.tv_sec) * 1000000 + (endDataRead.tv_usec - startDataRead.tv_usec) << endl;
 	cout << (endAlgo.tv_sec - startAlgo.tv_sec) * 1000000 + (endAlgo.tv_usec - startAlgo.tv_usec) << endl;
-
-//	double elapsedDataRead = (double)(endDataRead - startDataRead) * 1000.0 / CLOCKS_PER_SEC;
-//	double elapsedAlgo = (double)(endAlgo - startAlgo) * 1000.0 / CLOCKS_PER_SEC;
-//	cout << elapsedDataRead << "," << elapsedAlgo << endl;
 
 	return 0;
 }
