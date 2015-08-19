@@ -69,6 +69,10 @@ void AStarBinaryHeap::shortestPath(int fromId, int toId) {
 			int neighbourIndex = this->neighbourDataBase->offset[current] + i;
 			int neighbour = this->neighbourDataBase->id[neighbourIndex];
 
+			if (closed[neighbour] == 1) {
+				continue;
+			}
+
 			double gCandidate = gScore[current] + this->neighbourDataBase->weight[neighbourIndex];
 #ifdef _DEBUG_
 			cout << "gCandidate: " << gCandidate << endl;

@@ -8,7 +8,7 @@
 #ifndef ASTARBINARYHEAP_H_
 #define ASTARBINARYHEAP_H_
 
-#define _DEBUG_
+//#define _DEBUG_
 
 #include "ShortestPathAlgorithm.h"
 #include "../datastructure/BinaryHeap.h"

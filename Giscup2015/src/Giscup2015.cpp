@@ -43,12 +43,12 @@ int main() {
 	RoadParser roadParser;
 
 	// loading data from files
-	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
-	roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
+	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
+	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
 	cout << "#node: " << nodeStore->size << endl;
 
-	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
-	roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
+	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
 	cout << "#road: " << roadStore->size << endl;
 
 	gettimeofday(&endDataRead, NULL);
@@ -96,7 +96,9 @@ int main() {
 //	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(8), nodeStore->getIndex(9)) << endl;
 
 	AStarBinaryHeap* algo = new AStarBinaryHeap(neighbourDataBase, nodeStore, roadStore);
-	algo->shortestPath(1, 10);
+//	algo->shortestPath(1, 10);
+	algo->shortestPath(978666719,84854497);
+
 
 	gettimeofday(&endAlgo, NULL);
 
