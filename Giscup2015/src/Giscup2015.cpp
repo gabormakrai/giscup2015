@@ -63,7 +63,7 @@ int main() {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
-//	GISVisualizer gisVisualizer;
+	GISVisualizer gisVisualizer;
 //	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
 //	return 0;
 
@@ -104,6 +104,8 @@ int main() {
 	AStarBinaryHeap* algo = new AStarBinaryHeap(neighbourDataBase, nodeStore, roadStore);
 //	algo->shortestPath(1, 10);
 	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
+
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828,48432214);
 
 	gettimeofday(&endAlgo, NULL);
 

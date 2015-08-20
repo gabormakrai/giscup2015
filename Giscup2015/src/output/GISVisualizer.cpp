@@ -48,5 +48,64 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, No
 	}
 
 	fs.close();
+}
+
+void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBinaryHeap* algo, int from, int to) {
+
+	NodeStore* nodeStore = algo->nodeStore;
+
+	// do the heapFile
+	std::fstream fs;
+	fs.open(heapNodeFile, std::fstream::out);
+	fs << "id,x,y" << std::endl;
+
+	BinaryHeap<double>* heap = algo->heap;
+	for (int i = 0; i < heap->size; ++i) {
+		int node = heap->nodeArray[i];
+
+		fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
+
+	}
+	fs.close();
+
+	// do the closedFile
+	fs.open(closedNodeFile, std::fstream::out);
+	fs << "id,x,y" << std::endl;
+
+	for (int i = 0; i < nodeStore->size; ++i) {
+		if (algo->closed[i] == 1) {
+			int node = i;
+			fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
+		}
+	}
+	fs.close();
+
+	// do the shortestPath
+	fs.open(shortestPathFile, std::fstream::out);
+	fs << "id,linestring" << std::endl;
+
+	int current = nodeStore->getIndex(to);
+	int previous = algo->previous[current];
+	int edgeId = 0;
+
+	while (true) {
+
+		double x1 = nodeStore->x[previous];
+		double y1 = nodeStore->y[previous];
+		double x2 = nodeStore->x[current];
+		double y2 = nodeStore->y[current];
+
+		previous = current;
+		current = algo->previous[current];
+
+		fs << std::setprecision(16) << (edgeId++) << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+
+		if (current == nodeStore->getIndex(from)) {
+			break;
+		}
+	}
+
+	fs.close();
 
 }
+
