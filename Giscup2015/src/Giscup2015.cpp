@@ -16,6 +16,8 @@
 #include "sp/ShortestPathAlgorithm.h"
 #include "sp/AStarBinaryHeap.h"
 
+#include "output/GISVisualizer.h"
+
 #include <time.h>
 #include <sys/time.h>
 
@@ -61,6 +63,10 @@ int main() {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
+//	GISVisualizer gisVisualizer;
+//	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
+//	return 0;
+
 	// create neighbourdatabase
 	NeighbourDataBase* neighbourDataBase = new NeighbourDataBase(nodeStore, roadStore);
 
@@ -97,8 +103,7 @@ int main() {
 
 	AStarBinaryHeap* algo = new AStarBinaryHeap(neighbourDataBase, nodeStore, roadStore);
 //	algo->shortestPath(1, 10);
-	algo->shortestPath(978666719,84854497);
-
+	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
 
 	gettimeofday(&endAlgo, NULL);
 
