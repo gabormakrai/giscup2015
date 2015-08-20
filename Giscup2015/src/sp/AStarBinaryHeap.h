@@ -9,6 +9,7 @@
 #define ASTARBINARYHEAP_H_
 
 //#define _DEBUG_
+//#define _HEAPANALYSIS_
 
 #include "ShortestPathAlgorithm.h"
 #include "../datastructure/BinaryHeap.h"
@@ -26,7 +27,7 @@ public:
 
 	AStarBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
 	~AStarBinaryHeap();
-	void shortestPath(int fromId, int toId);
+	int shortestPath(int fromId, int toId);
 };
 
 

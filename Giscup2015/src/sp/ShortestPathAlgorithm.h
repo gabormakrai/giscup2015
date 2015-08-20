@@ -14,7 +14,7 @@
 
 class ShortestPathAlgorithm {
 public:
-	void shortestPath(int from, int to);
+	int shortestPath(int from, int to);
 };
 
 #endif /* SHORTESTPATHALGORITHM_H_ */

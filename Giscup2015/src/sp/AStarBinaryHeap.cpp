@@ -12,6 +12,11 @@
 using namespace std;
 #endif
 
+#ifdef _HEAPANALYSIS_
+#include <iostream>
+using namespace std;
+#endif
+
 #include <limits>
 
 AStarBinaryHeap::AStarBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore) {
@@ -32,7 +37,7 @@ AStarBinaryHeap::~AStarBinaryHeap() {
 	delete heap;
 }
 
-void AStarBinaryHeap::shortestPath(int fromId, int toId) {
+int AStarBinaryHeap::shortestPath(int fromId, int toId) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
 
@@ -52,8 +57,17 @@ void AStarBinaryHeap::shortestPath(int fromId, int toId) {
 
 	int current = -1;
 
+#ifdef _HEAPANALYSIS_
+	int heapIteration = 0;
+#endif
+
 	while (heap->size != 0) {
+
 		current = heap->extractMin();
+
+#ifdef _HEAPANALYSIS_
+		cout<<"iteration:"<<(heapIteration++)<<",heapSize:"<<heap->size<<",currentNode:"<<current<<",toNode:"<<to<<endl;
+#endif
 
 #ifdef _DEBUG_
 		cout << "AStar: current: " << current << endl;
@@ -86,6 +100,8 @@ void AStarBinaryHeap::shortestPath(int fromId, int toId) {
 		}
 	}
 
+	return current == to;
+
 #ifdef _DEBUG_
 		for (int i = 0; i < nodeStore->size; ++i) {
 			cout << "gScore[" << i << "]: " << gScore[i] << endl;
@@ -99,6 +115,5 @@ void AStarBinaryHeap::shortestPath(int fromId, int toId) {
 			cout << "previous[" << i << "]: " << previous[i] << endl;
 		}
 #endif
-
 
 }
