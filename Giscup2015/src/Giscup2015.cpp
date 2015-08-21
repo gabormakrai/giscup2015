@@ -14,7 +14,7 @@
 #include "data/NeighbourDataBase.h"
 
 #include "sp/ShortestPathAlgorithm.h"
-#include "sp/AStarBinaryHeap.h"
+#include "sp/AStarForwardBinaryHeap.h"
 
 #include "output/GISVisualizer.h"
 
@@ -101,7 +101,7 @@ int main() {
 //	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(3), nodeStore->getIndex(4)) << endl;
 //	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(8), nodeStore->getIndex(9)) << endl;
 
-	AStarBinaryHeap* algo = new AStarBinaryHeap(neighbourDataBase, nodeStore, roadStore);
+	AStarForwardBinaryHeap* algo = new AStarForwardBinaryHeap(neighbourDataBase, nodeStore, roadStore);
 //	algo->shortestPath(1, 10);
 	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
 

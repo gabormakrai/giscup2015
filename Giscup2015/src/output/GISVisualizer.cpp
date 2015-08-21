@@ -50,7 +50,7 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, No
 	fs.close();
 }
 
-void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBinaryHeap* algo, int from, int to) {
+void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarForwardBinaryHeap* algo, int from, int to) {
 
 	NodeStore* nodeStore = algo->nodeStore;
 

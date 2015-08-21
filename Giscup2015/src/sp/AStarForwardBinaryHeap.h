@@ -15,7 +15,7 @@
 #include "../datastructure/BinaryHeap.h"
 #include "../data/NeighbourDataBase.h"
 
-class AStarBinaryHeap : public ShortestPathAlgorithm {
+class AStarForwardBinaryHeap : public ShortestPathAlgorithm {
 public:
 	int* closed;
 	BinaryHeap<double>* heap;
@@ -25,8 +25,8 @@ public:
 	NodeStore* nodeStore;
 	NeighbourDataBase* neighbourDataBase;
 
-	AStarBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
-	~AStarBinaryHeap();
+	AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
+	~AStarForwardBinaryHeap();
 	int shortestPath(int fromId, int toId);
 };
 

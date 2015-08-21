@@ -5,7 +5,7 @@
  *      Author: makrai
  */
 
-#include "AStarBinaryHeap.h"
+#include "AStarForwardBinaryHeap.h"
 
 #ifdef _DEBUG_
 #include <iostream>
@@ -19,7 +19,7 @@ using namespace std;
 
 #include <limits>
 
-AStarBinaryHeap::AStarBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore) {
+AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore) {
 
 	this->nodeStore = nodeStore;
 	this->neighbourDataBase = neighbourDataBase;
@@ -30,14 +30,14 @@ AStarBinaryHeap::AStarBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore
 	this->heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
 }
 
-AStarBinaryHeap::~AStarBinaryHeap() {
+AStarForwardBinaryHeap::~AStarForwardBinaryHeap() {
 	delete [] closed;
 	delete [] previous;
 	delete [] gScore;
 	delete heap;
 }
 
-int AStarBinaryHeap::shortestPath(int fromId, int toId) {
+int AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
 
