@@ -10,6 +10,7 @@
 
 //#define _DEBUG_
 //#define _HEAPANALYSIS_
+#define _HEAPSTATISTICS_
 
 #include "ShortestPathAlgorithm.h"
 #include "../datastructure/BinaryHeap.h"

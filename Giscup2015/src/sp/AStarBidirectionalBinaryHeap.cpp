@@ -17,6 +17,11 @@ using namespace std;
 using namespace std;
 #endif
 
+#ifdef _HEAPSTATISTICS_
+#include <iostream>
+using namespace std;
+#endif
+
 #include <limits>
 
 AStarBidirectionalBinaryHeap::AStarBidirectionalBinaryHeap(NeighbourDataBase* forwardNeighbour, NeighbourDataBase* backwardNeighbour, NodeStore* nodeStore, RoadStore* roadStore) {
@@ -77,10 +82,27 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 	int forwardCurrent = -1;
 	int backwardCurrent = -1;
 
+#ifdef _HEAPSTATISTICS_
+	int forwardSteps = 0;
+	int maxForwardHeapSize = 0;
+	int avgForwardHeapSize = 0;
+	int backwardSteps = 0;
+	int maxBackwardHeapSize = 0;
+	int avgBackwardHeapSize = 0;
+#endif
+
 	while (forwardHeap->size + backwardHeap->size > 0) {
 
 		// FORWARD STEP
 		forwardCurrent = forwardHeap->extractMin();
+
+#ifdef _HEAPSTATISTICS_
+	++forwardSteps;
+	if (forwardHeap->size > maxForwardHeapSize) {
+		maxForwardHeapSize = forwardHeap->size;
+	}
+	avgForwardHeapSize += forwardHeap->size;
+#endif
 
 #ifdef _DEBUG_
 			cout << "forwardStep: forwardCurrent: " << forwardCurrent << endl;
@@ -116,6 +138,14 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 
 		// BACKWARD STEP
 		backwardCurrent = backwardHeap->extractMin();
+
+#ifdef _HEAPSTATISTICS_
+	++backwardSteps;
+	if (backwardHeap->size > maxBackwardHeapSize) {
+		maxBackwardHeapSize = backwardHeap->size;
+	}
+	avgBackwardHeapSize += backwardHeap->size;
+#endif
 
 #ifdef _DEBUG_
 			cout << "backwardStep: backwardCurrent: " << backwardCurrent << endl;
@@ -156,5 +186,10 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 	} else {
 		result = SHORTESTPATH_NO_PATH;
 	}
+
+#ifdef _HEAPSTATISTICS_
+	cout << "forwardSteps:" << forwardSteps << ", maxForwardHeapSize: " << maxForwardHeapSize << ", avgForwardHeapSize: " << (double)avgForwardHeapSize / (double)forwardSteps << endl;
+	cout << "backwardSteps:" << backwardSteps << ", maxBackwardHeapSize: " << maxBackwardHeapSize << ", avgBackwardHeapSize: " << (double)avgBackwardHeapSize / (double)backwardSteps << endl;
+#endif
 
 }

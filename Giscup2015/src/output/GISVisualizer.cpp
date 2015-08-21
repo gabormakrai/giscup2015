@@ -221,8 +221,6 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 	int previous = algo->previous[current];
 	int edgeId = 0;
 
-	std::cout<<"forward phase output... from:" << from << ", to:" << to << ", meetingNode: " << algo->meetingNode << std::endl;
-
 	while (true) {
 
 		double x1 = nodeStore->x[previous];
@@ -239,8 +237,6 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 			break;
 		}
 	}
-
-	std::cout<<"backward phase output..." << std::endl;
 
 	current = algo->meetingNode;
 	int next = algo->next[current];
@@ -262,8 +258,6 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 			break;
 		}
 	}
-
-	std::cout<<"done..." << std::endl;
 
 	fs.close();
 

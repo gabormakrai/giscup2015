@@ -17,6 +17,11 @@ using namespace std;
 using namespace std;
 #endif
 
+#ifdef _HEAPSTATISTICS_
+#include <iostream>
+using namespace std;
+#endif
+
 #include <limits>
 
 AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore) {
@@ -67,6 +72,12 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 
 	int current = -1;
 
+#ifdef _HEAPSTATISTICS_
+	int steps = 0;
+	int maxHeapSize = 0;
+	int avgHeapSize = 0;
+#endif
+
 #ifdef _HEAPANALYSIS_
 	int heapIteration = 0;
 #endif
@@ -74,6 +85,14 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 	while (heap->size != 0) {
 
 		current = heap->extractMin();
+
+#ifdef _HEAPSTATISTICS_
+	++steps;
+	if (heap->size > maxHeapSize) {
+		maxHeapSize = heap->size;
+	}
+	avgHeapSize += heap->size;
+#endif
 
 #ifdef _HEAPANALYSIS_
 		cout<<"iteration:"<<(heapIteration++)<<",heapSize:"<<heap->size<<",currentNode:"<<current<<",toNode:"<<to<<endl;
@@ -129,5 +148,9 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 		} else {
 			result = SHORTESTPATH_NO_PATH;
 		}
+
+#ifdef _HEAPSTATISTICS_
+	cout << "steps:" << steps << ", maxHeapSize: " << maxHeapSize << ", avgHeapSize: " << (double)avgHeapSize / (double)steps << endl;
+#endif
 
 }
