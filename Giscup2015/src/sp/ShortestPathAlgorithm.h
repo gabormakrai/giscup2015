@@ -12,9 +12,14 @@
 #include "../data/RoadStore.h"
 #include "../data/NeighbourDataBase.h"
 
+#define SHORTESTPATH_SOURCE_NOT_FOUND -1
+#define SHORTESTPATH_DESTINATION_NOT_FOUND -2
+#define SHORTESTPATH_NO_PATH 0
+#define SHORTESTPATH_PATH_FOUND 1
+
 class ShortestPathAlgorithm {
 public:
-	int shortestPath(int from, int to);
+	void shortestPath(int from, int to);
 };
 
 #endif /* SHORTESTPATHALGORITHM_H_ */

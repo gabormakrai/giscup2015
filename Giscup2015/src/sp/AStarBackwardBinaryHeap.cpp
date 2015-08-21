@@ -37,14 +37,24 @@ AStarBackwardBinaryHeap::~AStarBackwardBinaryHeap() {
 	delete heap;
 }
 
-int AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
+void AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
+
+	this->from = from;
+	this->to = to;
+	if (from == -1) {
+		this->result = SHORTESTPATH_SOURCE_NOT_FOUND;
+		return;
+	}
+	if (to == -1) {
+		this->result = SHORTESTPATH_DESTINATION_NOT_FOUND;
+		return;
+	}
 
 #ifdef _DEBUG_
 		cout << "AStarBackwardBinaryHeap: shortestPath: fromId:" << fromId << ", from:" << from << ", toId:" << toId << ", to: " << to << endl;
 #endif
-
 
 	for (int i = 0; i < nodeStore->size; ++i) {
 		gScore[i] = std::numeric_limits<double>::max();
@@ -114,6 +124,9 @@ int AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
 		}
 #endif
 
-	return current == from;
-
+	if (current == from) {
+		result = SHORTESTPATH_PATH_FOUND;
+	} else {
+		result = SHORTESTPATH_NO_PATH;
+	}
 }

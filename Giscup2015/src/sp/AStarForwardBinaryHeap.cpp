@@ -37,14 +37,24 @@ AStarForwardBinaryHeap::~AStarForwardBinaryHeap() {
 	delete heap;
 }
 
-int AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
+void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
+
+	this->from = from;
+	this->to = to;
+	if (from == -1) {
+		this->result = SHORTESTPATH_SOURCE_NOT_FOUND;
+		return;
+	}
+	if (to == -1) {
+		this->result = SHORTESTPATH_DESTINATION_NOT_FOUND;
+		return;
+	}
 
 #ifdef _DEBUG_
 		cout << "AStar: shortestPath: fromId:" << fromId << ", from:" << from << ", toId:" << toId << ", to: " << to << endl;
 #endif
-
 
 	for (int i = 0; i < nodeStore->size; ++i) {
 		gScore[i] = std::numeric_limits<double>::max();
@@ -100,8 +110,6 @@ int AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 		}
 	}
 
-	return current == to;
-
 #ifdef _DEBUG_
 		for (int i = 0; i < nodeStore->size; ++i) {
 			cout << "gScore[" << i << "]: " << gScore[i] << endl;
@@ -115,5 +123,11 @@ int AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 			cout << "previous[" << i << "]: " << previous[i] << endl;
 		}
 #endif
+
+		if (current == to) {
+			result = SHORTESTPATH_PATH_FOUND;
+		} else {
+			result = SHORTESTPATH_NO_PATH;
+		}
 
 }

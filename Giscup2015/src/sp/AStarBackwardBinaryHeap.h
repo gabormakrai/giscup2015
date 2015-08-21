@@ -17,6 +17,10 @@
 
 class AStarBackwardBinaryHeap : public ShortestPathAlgorithm {
 public:
+	int from;
+	int to;
+	int result;
+
 	int* closed;
 	BinaryHeap<double>* heap;
 	int* next;
@@ -27,7 +31,7 @@ public:
 
 	AStarBackwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
 	~AStarBackwardBinaryHeap();
-	int shortestPath(int fromId, int toId);
+	void shortestPath(int fromId, int toId);
 };
 
 
