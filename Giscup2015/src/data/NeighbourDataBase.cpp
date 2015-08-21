@@ -72,8 +72,8 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 		}
 
 		for (int i = 0; i < roadStore->size; ++i) {
-			int from = roadStore->endNode[i];
-			int to = roadStore->startNode[i];
+			int from = roadStore->startNode[i];
+			int to = roadStore->endNode[i];
 			int id = this->offset[to] + this->count[to];
 			++this->count[to];
 			this->id[id] = from;

@@ -15,6 +15,7 @@
 
 #include "sp/ShortestPathAlgorithm.h"
 #include "sp/AStarForwardBinaryHeap.h"
+#include "sp/AStarBackwardBinaryHeap.h"
 
 #include "output/GISVisualizer.h"
 
@@ -68,7 +69,43 @@ int main() {
 //	return 0;
 
 	// create neighbourdatabase
-	NeighbourDataBase* neighbourDataBase = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
+	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
+	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
+
+//	AStarForwardBinaryHeap* algo = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
+//	//algo->shortestPath(1, 10);
+//	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
+//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828,48432214);
+
+	 AStarBackwardBinaryHeap* algo = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
+	 //cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
+ 	 //gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 1,10);
+	 cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
+ 	 gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828, 48432214);
+
+	gettimeofday(&endAlgo, NULL);
+
+	delete algo;
+
+	// dispose roadStore
+	delete roadStore;
+
+	// dispose nodeStore
+	delete nodeStore;
+
+	// dispose neighbourDB
+	delete forwardNeighbour;
+	delete backwardNeighbour;
+
+	delete [] buffer;
+
+	cout << (endDataRead.tv_sec - startDataRead.tv_sec) * 1000000 + (endDataRead.tv_usec - startDataRead.tv_usec) << endl;
+	cout << (endAlgo.tv_sec - startAlgo.tv_sec) * 1000000 + (endAlgo.tv_usec - startAlgo.tv_usec) << endl;
+
+	return 0;
+}
+
+// dead code
 
 //	int* inDegree = new int[nodeStore->storeSize];
 //	int* outDegree = new int[nodeStore->storeSize];
@@ -101,35 +138,8 @@ int main() {
 //	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(3), nodeStore->getIndex(4)) << endl;
 //	cout << "DistanceTest: " << nodeStore->distance(nodeStore->getIndex(8), nodeStore->getIndex(9)) << endl;
 
-	AStarForwardBinaryHeap* algo = new AStarForwardBinaryHeap(neighbourDataBase, nodeStore, roadStore);
-//	algo->shortestPath(1, 10);
-	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
-
-	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828,48432214);
-
-	gettimeofday(&endAlgo, NULL);
-
 //	// dispose arrays
 //	delete [] inDegree;
 //	delete [] outDegree;
 //	delete [] inEdge;
 //	delete [] outEdge;
-
-	delete algo;
-
-	// dispose roadStore
-	delete roadStore;
-
-	// dispose nodeStore
-	delete nodeStore;
-
-	// dispose neighbourDB
-	delete neighbourDataBase;
-
-	delete [] buffer;
-
-	cout << (endDataRead.tv_sec - startDataRead.tv_sec) * 1000000 + (endDataRead.tv_usec - startDataRead.tv_usec) << endl;
-	cout << (endAlgo.tv_sec - startAlgo.tv_sec) * 1000000 + (endAlgo.tv_usec - startAlgo.tv_usec) << endl;
-
-	return 0;
-}
