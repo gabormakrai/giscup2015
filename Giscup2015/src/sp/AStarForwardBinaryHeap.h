@@ -5,8 +5,8 @@
  *      Author: makrai
  */
 
-#ifndef ASTARBINARYHEAP_H_
-#define ASTARBINARYHEAP_H_
+#ifndef ASTARFORWARDBINARYHEAP_H_
+#define ASTARFORWARDBINARYHEAP_H_
 
 //#define _DEBUG_
 //#define _HEAPANALYSIS_
@@ -31,4 +31,4 @@ public:
 };
 
 
-#endif /* ASTARBINARYHEAP_H_ */
+#endif /* ASTARFORWARDBINARYHEAP_H_ */
