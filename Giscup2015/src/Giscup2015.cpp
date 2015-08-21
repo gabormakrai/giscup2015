@@ -68,7 +68,7 @@ int main() {
 //	return 0;
 
 	// create neighbourdatabase
-	NeighbourDataBase* neighbourDataBase = new NeighbourDataBase(nodeStore, roadStore);
+	NeighbourDataBase* neighbourDataBase = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
 
 //	int* inDegree = new int[nodeStore->storeSize];
 //	int* outDegree = new int[nodeStore->storeSize];

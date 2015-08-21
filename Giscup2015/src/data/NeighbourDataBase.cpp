@@ -12,7 +12,7 @@
 using namespace std;
 #endif
 
-NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore) {
+NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode) {
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[roadStore->storeSize];
@@ -23,39 +23,77 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore)
 		this->offset[i] = 0;
 	}
 
-	for (int i = 0; i < roadStore->size; ++i) {
-		++this->count[roadStore->startNode[i]];
-	}
+	if (mode == NEIGHBOURDATABASE_FORWARD) {
 
-	for (int i = 1; i < nodeStore->size; ++i) {
-		this->offset[i] = this->offset[i-1] + this->count[i-1];
-	}
+		for (int i = 0; i < roadStore->size; ++i) {
+			++this->count[roadStore->startNode[i]];
+		}
 
-	for (int i = 0; i < nodeStore->size; ++i) {
-		this->count[i] = 0;
-	}
+		for (int i = 1; i < nodeStore->size; ++i) {
+			this->offset[i] = this->offset[i-1] + this->count[i-1];
+		}
 
-	for (int i = 0; i < roadStore->size; ++i) {
-		int from = roadStore->startNode[i];
-		int to = roadStore->endNode[i];
-		int id = this->offset[from] + this->count[from];
-		++this->count[from];
-		this->id[id] = to;
-		this->weight[id] = roadStore->length[i];
-	}
+		for (int i = 0; i < nodeStore->size; ++i) {
+			this->count[i] = 0;
+		}
+
+		for (int i = 0; i < roadStore->size; ++i) {
+			int from = roadStore->startNode[i];
+			int to = roadStore->endNode[i];
+			int id = this->offset[from] + this->count[from];
+			++this->count[from];
+			this->id[id] = to;
+			this->weight[id] = roadStore->length[i];
+		}
 
 #ifdef _DEBUG_
-	for (int i = 0; i < nodeStore->size; ++i) {
-		cout << "count["<<i<<"]=" << this->count[i] << ", offset[" << i << "]=" << this->offset[i] << endl;
-	}
-
-	for (int i = 0; i < nodeStore->size; ++i) {
-		cout << "Node " << i << "(id:" << nodeStore->id[i] << ") has " << this->count[i] << " neighbours..." << endl;
-		for (int j = 0; j < this->count[i]; ++j) {
-			cout << "\t to " << this->id[this->offset[i] + j] << "(id:" << nodeStore->id[this->id[this->offset[i] + j]] << ") w: " << this->weight[this->offset[i] + j] << endl;
+		for (int i = 0; i < nodeStore->size; ++i) {
+			cout << "count["<<i<<"]=" << this->count[i] << ", offset[" << i << "]=" << this->offset[i] << endl;
 		}
-	}
+
+		for (int i = 0; i < nodeStore->size; ++i) {
+			cout << "Node " << i << "(id:" << nodeStore->id[i] << ") has " << this->count[i] << " neighbours..." << endl;
+			for (int j = 0; j < this->count[i]; ++j) {
+				cout << "\t to " << this->id[this->offset[i] + j] << "(id:" << nodeStore->id[this->id[this->offset[i] + j]] << ") w: " << this->weight[this->offset[i] + j] << endl;
+			}
+		}
 #endif
+	} else {
+		for (int i = 0; i < roadStore->size; ++i) {
+			++this->count[roadStore->endNode[i]];
+		}
+
+		for (int i = 1; i < nodeStore->size; ++i) {
+			this->offset[i] = this->offset[i-1] + this->count[i-1];
+		}
+
+		for (int i = 0; i < nodeStore->size; ++i) {
+			this->count[i] = 0;
+		}
+
+		for (int i = 0; i < roadStore->size; ++i) {
+			int from = roadStore->endNode[i];
+			int to = roadStore->startNode[i];
+			int id = this->offset[to] + this->count[to];
+			++this->count[to];
+			this->id[id] = from;
+			this->weight[id] = roadStore->length[i];
+		}
+
+#ifdef _DEBUG_
+		for (int i = 0; i < nodeStore->size; ++i) {
+			cout << "count["<<i<<"]=" << this->count[i] << ", offset[" << i << "]=" << this->offset[i] << endl;
+		}
+
+		for (int i = 0; i < nodeStore->size; ++i) {
+			cout << "Node " << i << "(id:" << nodeStore->id[i] << ") has " << this->count[i] << " neighbours..." << endl;
+			for (int j = 0; j < this->count[i]; ++j) {
+				cout << "\t to " << this->id[this->offset[i] + j] << "(id:" << nodeStore->id[this->id[this->offset[i] + j]] << ") w: " << this->weight[this->offset[i] + j] << endl;
+			}
+		}
+#endif
+
+	}
 }
 
 NeighbourDataBase::~NeighbourDataBase() {
