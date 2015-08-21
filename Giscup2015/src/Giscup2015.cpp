@@ -6,8 +6,6 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-//#define _DEBUG_
-
 #include "data/RoadParser.h"
 #include "data/RoadStore.h"
 #include "data/NodeStore.h"
@@ -28,11 +26,19 @@ using namespace std;
 
 #define BUFFER_SIZE 16384
 
+void showElapsedTime(struct timeval start, struct timeval end) {
+	cout << (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec) << endl;
+}
+
 int main() {
 	struct timeval startDataRead;
 	struct timeval endDataRead;
-	struct timeval startAlgo;
-	struct timeval endAlgo;
+	struct timeval startPre;
+	struct timeval endPre;
+	struct timeval startSearch;
+	struct timeval endSearch;
+	struct timeval startDataWrite;
+	struct timeval endDataWrite;
 
 	gettimeofday(&startDataRead, NULL);
 
@@ -47,19 +53,18 @@ int main() {
 	RoadParser roadParser;
 
 	// loading data from files
-	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
+	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
 	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
 
 	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
 	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
 
-	// print out general statistics
-	cout << "#node: " << nodeStore->size << endl;
-	cout << "#road: " << roadStore->size << endl;
+//	// print out general statistics
+//	cout << "#node: " << nodeStore->size << endl;
+//	cout << "#road: " << roadStore->size << endl;
 
 	gettimeofday(&endDataRead, NULL);
-
-	gettimeofday(&startAlgo, NULL);
+	gettimeofday(&startPre, NULL);
 
 	// reassign id for nodes
 	nodeStore->sort();
@@ -71,31 +76,35 @@ int main() {
 	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
 	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
 
-	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
-	//algo->shortestPath(1, 10);
-	algo1->shortestPath(50096828,48432214);
-	cout << "sp(50096828,48432214):" << algo1->result << endl;
+	gettimeofday(&endPre, NULL);
+	gettimeofday(&startSearch, NULL);
 
-	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
-	//cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
-	algo2->shortestPath(50096828,48432214);
-	cout << "sp(50096828,48432214):" << algo2->result << endl;
+//	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
+//	//algo->shortestPath(1, 10);
+//	algo1->shortestPath(50096828,48432214);
+//	//cout << "sp(50096828,48432214):" << algo1->result << endl;
+
+//	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
+//	//cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
+//	algo2->shortestPath(50096828,48432214);
+//	//cout << "sp(50096828,48432214):" << algo2->result << endl;
 
 	AStarBidirectionalBinaryHeap* algo3 = new AStarBidirectionalBinaryHeap(forwardNeighbour, backwardNeighbour, nodeStore, roadStore);
 	// cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
 	algo3->shortestPath(50096828,48432214);
-	cout << "sp(50096828,48432214):" << algo3->result << endl;
+	//cout << "sp(50096828,48432214):" << algo3->result << endl;
 
-	gettimeofday(&endAlgo, NULL);
+	gettimeofday(&endSearch, NULL);
+	gettimeofday(&startDataWrite, NULL);
 
 	GISVisualizer gisVisualizer;
 //	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
-	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
-	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
-	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
+//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
+//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
+//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
 
-	delete algo1;
-	delete algo2;
+//	delete algo1;
+//	delete algo2;
 	delete algo3;
 
 	// dispose roadStore
@@ -110,8 +119,16 @@ int main() {
 
 	delete [] buffer;
 
-	cout << (endDataRead.tv_sec - startDataRead.tv_sec) * 1000000 + (endDataRead.tv_usec - startDataRead.tv_usec) << endl;
-	cout << (endAlgo.tv_sec - startAlgo.tv_sec) * 1000000 + (endAlgo.tv_usec - startAlgo.tv_usec) << endl;
+	gettimeofday(&endDataWrite, NULL);
+
+//	cout << "DataRead:";
+	showElapsedTime(startDataRead, endDataRead);
+//	cout << "Pre:";
+	showElapsedTime(startPre, endPre);
+//	cout << "Search:";
+	showElapsedTime(startSearch, endSearch);
+//	cout << "DataWrite:";
+	showElapsedTime(startDataWrite, endDataWrite);
 
 	return 0;
 }
