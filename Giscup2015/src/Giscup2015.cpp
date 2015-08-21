@@ -16,6 +16,7 @@
 #include "sp/ShortestPathAlgorithm.h"
 #include "sp/AStarForwardBinaryHeap.h"
 #include "sp/AStarBackwardBinaryHeap.h"
+#include "sp/AStarBidirectionalBinaryHeap.h"
 
 #include "output/GISVisualizer.h"
 
@@ -48,10 +49,12 @@ int main() {
 	// loading data from files
 	roadParser.loadNodeFile("/home/makrai/giscup2015/data/sfo_nodes2.txt", buffer, BUFFER_SIZE, nodeStore);
 	//roadParser.loadNodeFile("/home/makrai/giscup2015/data/example_nodes.txt", buffer, BUFFER_SIZE, nodeStore);
-	cout << "#node: " << nodeStore->size << endl;
 
 	roadParser.loadRoadFile("/home/makrai/giscup2015/data/sfo_roads.txt", buffer, BUFFER_SIZE, roadStore);
 	//roadParser.loadRoadFile("/home/makrai/giscup2015/data/example_roads.txt", buffer, BUFFER_SIZE, roadStore);
+
+	// print out general statistics
+	cout << "#node: " << nodeStore->size << endl;
 	cout << "#road: " << roadStore->size << endl;
 
 	gettimeofday(&endDataRead, NULL);
@@ -64,28 +67,36 @@ int main() {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
-	GISVisualizer gisVisualizer;
-//	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
-//	return 0;
-
 	// create neighbourdatabase
 	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
 	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
 
-//	AStarForwardBinaryHeap* algo = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
-//	//algo->shortestPath(1, 10);
-//	cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
-//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828,48432214);
+	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
+	//algo->shortestPath(1, 10);
+	algo1->shortestPath(50096828,48432214);
+	cout << "sp(50096828,48432214):" << algo1->result << endl;
 
-	 AStarBackwardBinaryHeap* algo = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
-	 //cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
- 	 //gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 1,10);
-	 cout << "sp(50096828,48432214):" << algo->shortestPath(50096828,48432214) << endl;
- 	 gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/heapNodes.csv", "/media/sf_ubuntu_shared_folder/closedNodes.csv", "/media/sf_ubuntu_shared_folder/shortestPath.csv", algo, 50096828, 48432214);
+	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
+	//cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
+	algo2->shortestPath(50096828,48432214);
+	cout << "sp(50096828,48432214):" << algo2->result << endl;
+
+	AStarBidirectionalBinaryHeap* algo3 = new AStarBidirectionalBinaryHeap(forwardNeighbour, backwardNeighbour, nodeStore, roadStore);
+	// cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
+	algo3->shortestPath(50096828,48432214);
+	cout << "sp(50096828,48432214):" << algo3->result << endl;
 
 	gettimeofday(&endAlgo, NULL);
 
-	delete algo;
+	GISVisualizer gisVisualizer;
+//	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
+
+	delete algo1;
+	delete algo2;
+	delete algo3;
 
 	// dispose roadStore
 	delete roadStore;

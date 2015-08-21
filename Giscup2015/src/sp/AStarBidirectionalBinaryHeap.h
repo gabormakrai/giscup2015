@@ -8,7 +8,7 @@
 #ifndef ASTARBIDIRECTIONALBINARYHEAP_H_
 #define ASTARBIDIRECTIONALBINARYHEAP_H_
 
-#define _DEBUG_
+//#define _DEBUG_
 //#define _HEAPANALYSIS_
 
 #include "ShortestPathAlgorithm.h"
@@ -20,6 +20,7 @@ public:
 	int from;
 	int to;
 	int result;
+	int meetingNode;
 
 	int* closed;
 	BinaryHeap<double>* forwardHeap;

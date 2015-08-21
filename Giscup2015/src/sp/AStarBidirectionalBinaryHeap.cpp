@@ -87,6 +87,8 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 #endif
 
 		if (closed[forwardCurrent] == 1) {
+			this->meetingNode = forwardCurrent;
+
 #ifdef _DEBUG_
 			cout << "forward step found one which node was found by the backward step" << endl;
 #endif
@@ -120,6 +122,9 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 #endif
 
 		if (closed[backwardCurrent] == 1) {
+
+			this->meetingNode = backwardCurrent;
+
 #ifdef _DEBUG_
 			cout << "backward step found one which node was found by the forward step" << endl;
 #endif

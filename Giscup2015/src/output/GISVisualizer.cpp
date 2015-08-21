@@ -52,7 +52,10 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, No
 	fs.close();
 }
 
-void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarForwardBinaryHeap* algo, int from, int to) {
+void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarForwardBinaryHeap* algo) {
+
+	int from = algo->from;
+	int to = algo->to;
 
 	NodeStore* nodeStore = algo->nodeStore;
 
@@ -86,7 +89,7 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 	fs.open(shortestPathFile, std::fstream::out);
 	fs << "id,linestring" << std::endl;
 
-	int current = nodeStore->getIndex(to);
+	int current = to;
 	int previous = algo->previous[current];
 	int edgeId = 0;
 
@@ -102,7 +105,7 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 
 		fs << std::setprecision(16) << (edgeId++) << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
 
-		if (current == nodeStore->getIndex(from)) {
+		if (current == from) {
 			break;
 		}
 	}
@@ -111,7 +114,10 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 
 }
 
-void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBackwardBinaryHeap* algo, int from, int to) {
+void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBackwardBinaryHeap* algo) {
+
+	int from = algo->from;
+	int to = algo->to;
 
 	NodeStore* nodeStore = algo->nodeStore;
 
@@ -145,13 +151,11 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 	fs.open(shortestPathFile, std::fstream::out);
 	fs << "id,linestring" << std::endl;
 
-	int current = nodeStore->getIndex(from);
+	int current = from;
 	int next = algo->next[current];
 	int edgeId = 0;
 
 	while (true) {
-
-//		std::cout<<"current:" << current << ",next:" << next << std::endl;
 
 		double x1 = nodeStore->x[next];
 		double y1 = nodeStore->y[next];
@@ -164,10 +168,103 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 
 		fs << std::setprecision(16) << (edgeId++) << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
 
-		if (current == nodeStore->getIndex(to)) {
+		if (current == to) {
 			break;
 		}
 	}
 
 	fs.close();
+}
+
+void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBidirectionalBinaryHeap* algo) {
+
+	int from = algo->from;
+	int to = algo->to;
+
+	NodeStore* nodeStore = algo->nodeStore;
+
+	// do the heapFile
+	std::fstream fs;
+	fs.open(heapNodeFile, std::fstream::out);
+	fs << "id,x,y" << std::endl;
+
+	BinaryHeap<double>* heap = algo->forwardHeap;
+	for (int i = 0; i < heap->size; ++i) {
+		int node = heap->nodeArray[i];
+		fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
+	}
+	heap = algo->backwardHeap;
+	for (int i = 0; i < heap->size; ++i) {
+		int node = heap->nodeArray[i];
+		fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
+	}
+
+	fs.close();
+
+	// do the closedFile
+	fs.open(closedNodeFile, std::fstream::out);
+	fs << "id,x,y" << std::endl;
+
+	for (int i = 0; i < nodeStore->size; ++i) {
+		if (algo->closed[i] == 1) {
+			int node = i;
+			fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
+		}
+	}
+	fs.close();
+
+	// do the shortestPath
+	fs.open(shortestPathFile, std::fstream::out);
+	fs << "id,linestring" << std::endl;
+
+	int current = algo->meetingNode;
+	int previous = algo->previous[current];
+	int edgeId = 0;
+
+	std::cout<<"forward phase output... from:" << from << ", to:" << to << ", meetingNode: " << algo->meetingNode << std::endl;
+
+	while (true) {
+
+		double x1 = nodeStore->x[previous];
+		double y1 = nodeStore->y[previous];
+		double x2 = nodeStore->x[current];
+		double y2 = nodeStore->y[current];
+
+		previous = current;
+		current = algo->previous[current];
+
+		fs << std::setprecision(16) << (edgeId++) << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+
+		if (current == from) {
+			break;
+		}
+	}
+
+	std::cout<<"backward phase output..." << std::endl;
+
+	current = algo->meetingNode;
+	int next = algo->next[current];
+
+	while (true) {
+
+		double x1 = nodeStore->x[next];
+		double y1 = nodeStore->y[next];
+
+		double x2 = nodeStore->x[current];
+		double y2 = nodeStore->y[current];
+
+		current = next;
+		next = algo->next[current];
+
+		fs << std::setprecision(16) << (edgeId++) << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+
+		if (current == to) {
+			break;
+		}
+	}
+
+	std::cout<<"done..." << std::endl;
+
+	fs.close();
+
 }
