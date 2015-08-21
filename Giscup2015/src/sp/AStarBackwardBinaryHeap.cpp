@@ -95,7 +95,7 @@ int AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
 			if (heap->lookupTable[neighbour] == -1 || gCandidate < gScore[neighbour]) {
 				next[neighbour] = current;
 				gScore[neighbour] = gCandidate;
-				heap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, to));
+				heap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, from));
 			}
 		}
 	}
