@@ -18,6 +18,7 @@ RoadStore::RoadStore(int initialStoreSize) {
 	endNode = new int[initialStoreSize];
 	length = new double[initialStoreSize];
 	speedLimit = new double[initialStoreSize];
+	positionInFile = new int[initialStoreSize];
 	size = 0;
 	storeSize = initialStoreSize;
 }
@@ -28,9 +29,10 @@ RoadStore::~RoadStore() {
 	delete [] endNode;
 	delete [] length;
 	delete [] speedLimit;
+	delete [] positionInFile;
 }
 
-void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit) {
+void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit, int positionInFile) {
 	if (size == storeSize) {
 		int newSize = size * 2;
 		int* newEdgeId = new int[newSize];
@@ -38,6 +40,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		int* newEndNode = new int[newSize];
 		double* newLength = new double[newSize];
 		double* newSpeedLimit = new double[newSize];
+		int* newPositionInFile = new int[newSize];
 
 		for (int i = 0; i < size; ++i) {
 			newEdgeId[i] = this->edgeId[i];
@@ -45,6 +48,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 			newEndNode[i] = this->endNode[i];
 			newLength[i] = this->length[i];
 			newSpeedLimit[i] = this->speedLimit[i];
+			newPositionInFile[i] = this->positionInFile[i];
 		}
 
 		delete [] this->edgeId;
@@ -52,12 +56,14 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		delete [] this->endNode;
 		delete [] this->length;
 		delete [] this->speedLimit;
+		delete [] this->positionInFile;
 
 		this->edgeId = newEdgeId;
 		this->startNode = newStartNode;
 		this->endNode = newEndNode;
 		this->length = newLength;
 		this->speedLimit = newSpeedLimit;
+		this->positionInFile = newPositionInFile;
 
 		storeSize = newSize;
 	}
@@ -67,6 +73,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 	this->endNode[size] = endNode;
 	this->length[size] = length;
 	this->speedLimit[size] = speedLimit;
+	this->positionInFile[size] = positionInFile;
 
 	++size;
 }
