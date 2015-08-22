@@ -18,6 +18,7 @@
 
 #include "output/ShortestPathWriter.h"
 #include "output/GISVisualizer.h"
+#include "output/StatFileWriter.h"
 
 #include <time.h>
 #include <sys/time.h>
@@ -36,6 +37,10 @@ using namespace std;
 
 void showElapsedTime(struct timeval start, struct timeval end) {
 	cout << (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec) << endl;
+}
+
+double calculateElapsedTime(struct timeval start, struct timeval end) {
+	return (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec);
 }
 
 inline bool fileExists(const char* file) {
@@ -63,7 +68,8 @@ int main(int argc, char *argv[]) {
 	const char* inputPolygonFile;
 	const char* sourceNode;
 	const char* destinationNode;
-	const char* outputShortestPathFile;
+	const char* outputShortestDistancePathFile;
+	const char* outputShortestTimePathFile;
 	const char* outputStatFile;
 
 	if (argc == 1) { // TEST MODE
@@ -77,16 +83,18 @@ int main(int argc, char *argv[]) {
 //		inputPolygonFile = "/home/makrai/giscup2015/data/example_roads.txt";
 //		sourceNode = "1";
 //		destinationNode = "10";
-		outputShortestPathFile = "/media/sf_ubuntu_shared_folder/output_SP.txt";
+		outputShortestDistancePathFile = "/media/sf_ubuntu_shared_folder/output_SP_distance.txt";
+		outputShortestTimePathFile = "/media/sf_ubuntu_shared_folder/output_SP_time.txt";
 		outputStatFile = "/media/sf_ubuntu_shared_folder/output_Stat.txt";
-	} else if (argc == 8) { // NORMAL MODE
+	} else if (argc == 9) { // NORMAL MODE
 		inputRoadFile = argv[1];
 		inputNodeFile = argv[2];
 		inputPolygonFile = argv[3];
 		sourceNode = argv[4];
 		destinationNode = argv[5];
-		outputShortestPathFile = argv[6];
-		outputStatFile = argv[7];
+		outputShortestDistancePathFile = argv[6];
+		outputShortestTimePathFile = argv[7];
+		outputStatFile = argv[8];
 	} else {
 		cout << "Not enough parameter..." << endl;
 		// TODO: here...
@@ -97,7 +105,7 @@ int main(int argc, char *argv[]) {
 #ifdef _DEBUG_
 	cout << "Parameters:" << endl;
 	cout << "\tinputNodeFile: " << inputNodeFile << endl << "\tinputRoadFile: " << inputRoadFile << endl << "\tinputPolygonFile: " << inputPolygonFile << endl << "\tsourceNode: " << sourceNode << endl;
-	cout << "\tdestinationNode: " << destinationNode << endl << "\toutputShortestPathFile: " << outputShortestPathFile << endl << "\toutputStatFile: " << outputStatFile << endl;
+	cout << "\tdestinationNode: " << destinationNode << endl << "\toutputShortestDistancePathFile: " << outputShortestDistancePathFile << endl << "outputShortestTimePathFile: " << outputShortestTimePathFile << endl << "\toutputStatFile: " << outputStatFile << endl;
 #endif
 
 	// check input files
@@ -169,12 +177,12 @@ int main(int argc, char *argv[]) {
 #ifdef ALGO1
 	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
-	cout << algo1->result << endl;
+	// cout << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
 	gettimeofday(&endSearch1, NULL);
 	gettimeofday(&startSearch2, NULL);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_TIME);
-	cout << algo1->result << endl;
+	// cout << algo1->result << endl;
 	algo1->reconstructPath(spTime);
 #endif
 
@@ -202,7 +210,19 @@ int main(int argc, char *argv[]) {
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
 
 	ShortestPathWriter shortestPathWriter;
-	shortestPathWriter.write(spDistance, outputShortestPathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
+	shortestPathWriter.write(spDistance, outputShortestDistancePathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
+	shortestPathWriter.write(spTime, outputShortestTimePathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
+
+#ifdef _DEBUG_
+	cout << "ShortestPathDistance: length: " << spDistance->length << ", time: " << spDistance->time << endl;
+	cout << "ShortestPathTime: length: " << spTime->length << ", time: " << spTime->time << endl;
+#endif
+
+	StatFileWriter statFileWriter;
+	double preTime = calculateElapsedTime(startPre, endPre);
+	double searchDistance = calculateElapsedTime(startSearch1, endSearch1);
+	double searchTime = calculateElapsedTime(startSearch2, endSearch2);
+	statFileWriter.write(spDistance, spTime, preTime + searchDistance, preTime + searchTime, outputStatFile);
 
 #ifdef ALGO1
 	delete algo1;

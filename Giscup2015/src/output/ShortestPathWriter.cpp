@@ -29,6 +29,10 @@ void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const cha
 
 		int pos = 0;
 		int road = sp->next();
+
+		sp->length += roadStore->length[road];
+		sp->time += roadStore->length[road] / roadStore->speedLimit[road];
+
 		int seek = roadStore->positionInFile[road];
 		int length = (road + 1) == roadStore->size ? -1 : roadStore->positionInFile[road + 1] - seek;
 
