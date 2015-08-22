@@ -18,7 +18,7 @@ double distanceByDistance(double dx, double dy) {
 }
 
 double distanceByTime(double dx, double dy) {
-	return sqrt(dx * dx + dy * dy) / 2.0;
+	return sqrt(dx * dx + dy * dy) / 11.1;
 }
 
 NodeStore::NodeStore(int initialStoreSize) {

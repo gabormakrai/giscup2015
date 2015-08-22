@@ -49,8 +49,10 @@ int main(int argc, char *argv[]) {
 	struct timeval endDataRead;
 	struct timeval startPre;
 	struct timeval endPre;
-	struct timeval startSearch;
-	struct timeval endSearch;
+	struct timeval startSearch1;
+	struct timeval endSearch1;
+	struct timeval startSearch2;
+	struct timeval endSearch2;
 	struct timeval startDataWrite;
 	struct timeval endDataWrite;
 
@@ -162,14 +164,18 @@ int main(int argc, char *argv[]) {
 #endif
 
 	gettimeofday(&endPre, NULL);
-	gettimeofday(&startSearch, NULL);
+	gettimeofday(&startSearch1, NULL);
 
 #ifdef ALGO1
 	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
-	//algo->shortestPath(1, 10);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
-	//cout << "sp(50096828,48432214):" << algo1->result << endl;
+	cout << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
+	gettimeofday(&endSearch1, NULL);
+	gettimeofday(&startSearch2, NULL);
+	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_TIME);
+	cout << algo1->result << endl;
+	algo1->reconstructPath(spTime);
 #endif
 
 #ifdef ALGO2
@@ -186,7 +192,7 @@ int main(int argc, char *argv[]) {
 	//cout << "sp(50096828,48432214):" << algo3->result << endl;
 #endif
 
-	gettimeofday(&endSearch, NULL);
+	gettimeofday(&endSearch2, NULL);
 	gettimeofday(&startDataWrite, NULL);
 
 //	GISVisualizer gisVisualizer;
@@ -233,8 +239,10 @@ int main(int argc, char *argv[]) {
 	showElapsedTime(startDataRead, endDataRead);
 //	cout << "Pre:";
 	showElapsedTime(startPre, endPre);
-//	cout << "Search:";
-	showElapsedTime(startSearch, endSearch);
+//	cout << "Search1:";
+	showElapsedTime(startSearch1, endSearch1);
+//	cout << "Search1:";
+	showElapsedTime(startSearch2, endSearch2);
 //	cout << "DataWrite:";
 	showElapsedTime(startDataWrite, endDataWrite);
 
