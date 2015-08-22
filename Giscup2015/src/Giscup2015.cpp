@@ -29,6 +29,8 @@ using namespace std;
 //#define ALGO2
 #define ALGO3
 
+#define _DEBUG_
+
 #define BUFFER_SIZE 16384
 
 void showElapsedTime(struct timeval start, struct timeval end) {
@@ -89,6 +91,12 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
+#ifdef _DEBUG_
+	cout << "Parameters:" << endl;
+	cout << "inputNodeFile: " << inputNodeFile << endl << "inputRoadFile: " << inputRoadFile << endl << "inputPolygonFile: " << endl << "sourceNode: " << sourceNode << endl;
+	cout << "destinationNode: " << destinationNode << endl << "outputShortestPathFile: " << outputShortestPathFile << endl << "outputStatFile: " << outputStatFile << endl;
+#endif
+
 	// check input files
 	if (!fileExists(inputRoadFile)) {
 		cout << "Problem: input road file (" << inputRoadFile << ") does not exist..." << endl;
@@ -115,12 +123,13 @@ int main(int argc, char *argv[]) {
 
 	// loading data from files
 	roadParser.loadNodeFile(inputNodeFile, buffer, BUFFER_SIZE, nodeStore);
-
 	roadParser.loadRoadFile(inputRoadFile, buffer, BUFFER_SIZE, roadStore);
 
-//	// print out general statistics
-//	cout << "#node: " << nodeStore->size << endl;
-//	cout << "#road: " << roadStore->size << endl;
+#ifdef _DEBUG_
+	// print out general statistics
+	cout << "#node: " << nodeStore->size << endl;
+	cout << "#road: " << roadStore->size << endl;
+#endif
 
 	gettimeofday(&endDataRead, NULL);
 	gettimeofday(&startPre, NULL);
