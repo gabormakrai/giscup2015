@@ -10,6 +10,8 @@
 #include "data/RoadStore.h"
 #include "data/NodeStore.h"
 #include "data/NeighbourDataBase.h"
+#include "data/PolygonStore.h"
+#include "data/PolygonParser.h"
 
 #include "sp/ShortestPathAlgorithm.h"
 #include "sp/AStarForwardBinaryHeap.h"
@@ -31,7 +33,7 @@ using namespace std;
 //#define ALGO2
 //#define ALGO3
 
-//#define _DEBUG_
+#define _DEBUG_
 
 #define BUFFER_SIZE 16384
 
@@ -105,7 +107,7 @@ int main(int argc, char *argv[]) {
 #ifdef _DEBUG_
 	cout << "Parameters:" << endl;
 	cout << "\tinputNodeFile: " << inputNodeFile << endl << "\tinputRoadFile: " << inputRoadFile << endl << "\tinputPolygonFile: " << inputPolygonFile << endl << "\tsourceNode: " << sourceNode << endl;
-	cout << "\tdestinationNode: " << destinationNode << endl << "\toutputShortestDistancePathFile: " << outputShortestDistancePathFile << endl << "outputShortestTimePathFile: " << outputShortestTimePathFile << endl << "\toutputStatFile: " << outputStatFile << endl;
+	cout << "\tdestinationNode: " << destinationNode << endl << "\toutputShortestDistancePathFile: " << outputShortestDistancePathFile << endl << "\toutputShortestTimePathFile: " << outputShortestTimePathFile << endl << "\toutputStatFile: " << outputStatFile << endl;
 #endif
 
 	// check input files
@@ -114,11 +116,11 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	if (!fileExists(inputNodeFile)) {
-		cout << "Problem: input road file (" << inputNodeFile << ") does not exist..." << endl;
+		cout << "Problem: input node file (" << inputNodeFile << ") does not exist..." << endl;
 		return 0;
 	}
 	if (!fileExists(inputPolygonFile)) {
-		cout << "Problem: input road file (" << inputPolygonFile << ") does not exist..." << endl;
+		cout << "Problem: input polygon file (" << inputPolygonFile << ") does not exist..." << endl;
 		return 0;
 	}
 
@@ -129,13 +131,16 @@ int main(int argc, char *argv[]) {
 	// storages
 	RoadStore* roadStore = new RoadStore(BUFFER_SIZE);
 	NodeStore* nodeStore = new NodeStore(BUFFER_SIZE);
+	PolygonStore* polygonStore = new PolygonStore(BUFFER_SIZE / 4096);
 
-	// road parser
+	// road parser & polygon parser
 	RoadParser roadParser;
+	PolygonParser PolygonParser;
 
 	// loading data from files
 	roadParser.loadNodeFile(inputNodeFile, buffer, BUFFER_SIZE, nodeStore);
 	roadParser.loadRoadFile(inputRoadFile, buffer, BUFFER_SIZE, roadStore);
+	PolygonParser.parse(inputPolygonFile, buffer, BUFFER_SIZE, polygonStore);
 
 	int* array1 = new int[roadStore->storeSize];
 	int* array2 = new int[roadStore->storeSize];
@@ -149,6 +154,7 @@ int main(int argc, char *argv[]) {
 	// print out general statistics
 	cout << "#node: " << nodeStore->size << endl;
 	cout << "#road: " << roadStore->size << endl;
+	cout << "#polygon: " << polygonStore->size << endl;
 #endif
 
 	int sourceNodeId = atoi(sourceNode);
@@ -236,11 +242,10 @@ int main(int argc, char *argv[]) {
 	delete algo3;
 #endif
 
-	// dispose roadStore
+	// dispose storages
 	delete roadStore;
-
-	// dispose nodeStore
 	delete nodeStore;
+	delete polygonStore;
 
 	// dispose neighbourDB
 #if defined(ALGO1) || defined(ALGO3)
