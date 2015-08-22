@@ -11,6 +11,8 @@
 AStarForwardShortestPath::AStarForwardShortestPath(int* storage) {
 	this->storage = storage;
 	this->current = 0;
+	this->length = 0.0;
+	this->time = 0.0;
 }
 
 void AStarForwardShortestPath::init() {

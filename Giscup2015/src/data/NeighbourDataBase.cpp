@@ -109,6 +109,7 @@ NeighbourDataBase::~NeighbourDataBase() {
 	delete [] id;
 	delete [] distanceWeight;
 	delete [] timeWeight;
+	delete [] roadId;
 }
 
 void NeighbourDataBase::setWeight(int mode) {

@@ -251,7 +251,14 @@ int main(int argc, char *argv[]) {
 	delete backwardNeighbour;
 #endif
 
+	delete spDistance;
+	delete spTime;
+
 	delete [] buffer;
+	delete [] buffer2;
+
+	delete [] array1;
+	delete [] array2;
 
 	gettimeofday(&endDataWrite, NULL);
 

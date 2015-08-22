@@ -39,6 +39,7 @@ AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataB
 AStarForwardBinaryHeap::~AStarForwardBinaryHeap() {
 	delete [] closed;
 	delete [] previous;
+	delete [] previousRoad;
 	delete [] gScore;
 	delete heap;
 }
