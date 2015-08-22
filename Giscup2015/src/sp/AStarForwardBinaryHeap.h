@@ -34,7 +34,7 @@ public:
 
 	AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
 	~AStarForwardBinaryHeap();
-	void shortestPath(int fromId, int toId);
+	void shortestPath(int fromId, int toId, int mode);
 	void reconstructPath(AStarForwardShortestPath* path);
 };
 

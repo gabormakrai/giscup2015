@@ -13,12 +13,21 @@
 using namespace std;
 #endif
 
+double distanceByDistance(double dx, double dy) {
+	return sqrt(dx * dx + dy * dy);
+}
+
+double distanceByTime(double dx, double dy) {
+	return sqrt(dx * dx + dy * dy) / 2.0;
+}
+
 NodeStore::NodeStore(int initialStoreSize) {
 	x = new double[initialStoreSize];
 	y = new double[initialStoreSize];
 	id = new int[initialStoreSize];
 	size = 0;
 	storeSize = initialStoreSize;
+	distanceFunction = &distanceByDistance;
 }
 
 NodeStore::~NodeStore() {
@@ -162,9 +171,16 @@ int NodeStore::getIndex(int id) {
 	return binarySearch(this->id, 0, this->size - 1, id);
 }
 
+void NodeStore::setDistanceFunction(int mode) {
+	if (mode == 0) { // distance by distance
+		distanceFunction = &distanceByDistance;
+	} else { // distance by time
+		distanceFunction = &distanceByTime;
+	}
+}
+
 double NodeStore::distance(int i1, int i2) {
 	double dx = x[i1] - x[i2];
 	double dy = y[i1] - y[i2];
-	return sqrt(dx * dx + dy * dy);
+	return (*distanceFunction)(dx, dy);
 }
-

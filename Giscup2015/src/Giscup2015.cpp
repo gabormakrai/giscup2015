@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 #ifdef ALGO1
 	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
 	//algo->shortestPath(1, 10);
-	algo1->shortestPath(sourceNodeId, destinationNodeId);
+	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
 	//cout << "sp(50096828,48432214):" << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
 #endif

@@ -17,9 +17,12 @@
 #define SHORTESTPATH_NO_PATH 0
 #define SHORTESTPATH_PATH_FOUND 1
 
+#define SHORTESTPATH_DISTANCE 0
+#define SHORTESTPATH_TIME 1
+
 class ShortestPathAlgorithm {
 public:
-	void shortestPath(int from, int to);
+	void shortestPath(int from, int to, int mode);
 };
 
 #endif /* SHORTESTPATHALGORITHM_H_ */

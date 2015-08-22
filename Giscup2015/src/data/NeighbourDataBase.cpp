@@ -16,7 +16,9 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[roadStore->storeSize];
-	this->weight = new double[roadStore->storeSize];
+	this->distanceWeight = new double[roadStore->storeSize];
+	this->timeWeight = new double[roadStore->storeSize];
+	this->weight = distanceWeight;
 	this->roadId = new int[roadStore->storeSize];
 
 	for (int i = 0; i < nodeStore->size; ++i) {
@@ -44,7 +46,8 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			int id = this->offset[from] + this->count[from];
 			++this->count[from];
 			this->id[id] = to;
-			this->weight[id] = roadStore->length[i];
+			this->distanceWeight[id] = roadStore->length[i];
+			this->timeWeight[id] = roadStore->length[i] / roadStore->speedLimit[i];
 			this->roadId[id] = i;
 		}
 
@@ -79,7 +82,8 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			int id = this->offset[to] + this->count[to];
 			++this->count[to];
 			this->id[id] = from;
-			this->weight[id] = roadStore->length[i];
+			this->distanceWeight[id] = roadStore->length[i];
+			this->timeWeight[id] = roadStore->length[i] / roadStore->speedLimit[i];
 			this->roadId[id] = i;
 		}
 
@@ -103,5 +107,14 @@ NeighbourDataBase::~NeighbourDataBase() {
 	delete [] count;
 	delete [] offset;
 	delete [] id;
-	delete [] weight;
+	delete [] distanceWeight;
+	delete [] timeWeight;
+}
+
+void NeighbourDataBase::setWeight(int mode) {
+	if (mode == 0) { // weight = distance
+		weight = distanceWeight;
+	} else { // weight = time
+		weight = timeWeight;
+	}
 }

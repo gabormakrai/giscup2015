@@ -43,9 +43,12 @@ AStarForwardBinaryHeap::~AStarForwardBinaryHeap() {
 	delete heap;
 }
 
-void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
+void AStarForwardBinaryHeap::shortestPath(int fromId, int toId, int mode) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
+
+	this->nodeStore->setDistanceFunction(mode);
+	this->neighbourDataBase->setWeight(mode);
 
 	this->from = from;
 	this->to = to;
