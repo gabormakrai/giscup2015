@@ -17,6 +17,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[roadStore->storeSize];
 	this->weight = new double[roadStore->storeSize];
+	this->roadId = new int[roadStore->storeSize];
 
 	for (int i = 0; i < nodeStore->size; ++i) {
 		this->count[i] = 0;
@@ -44,6 +45,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			++this->count[from];
 			this->id[id] = to;
 			this->weight[id] = roadStore->length[i];
+			this->roadId[id] = i;
 		}
 
 #ifdef _DEBUG_
@@ -78,6 +80,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			++this->count[to];
 			this->id[id] = from;
 			this->weight[id] = roadStore->length[i];
+			this->roadId[id] = i;
 		}
 
 #ifdef _DEBUG_

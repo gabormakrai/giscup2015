@@ -20,9 +20,9 @@ public:
 	int* id;
 	int* offset;
 	double* weight;
+	int* roadId;
 	NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode);
 	~NeighbourDataBase();
 };
-
 
 #endif /* NEIGHBOURDATABASE_H_ */
