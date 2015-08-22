@@ -10,8 +10,6 @@
 
 //#define _DEBUG_
 
-#include <fstream>
-#include <stdlib.h>
 #include "RoadStore.h"
 #include "NodeStore.h"
 

@@ -7,6 +7,9 @@
 
 #include "RoadParser.h"
 
+#include <fstream>
+#include <stdlib.h>
+
 #ifdef _DEBUG_
 #include <iostream>
 using namespace std;
