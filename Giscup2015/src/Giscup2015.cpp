@@ -16,6 +16,7 @@
 #include "sp/AStarBackwardBinaryHeap.h"
 #include "sp/AStarBidirectionalBinaryHeap.h"
 
+#include "output/ShortestPathWriter.h"
 #include "output/GISVisualizer.h"
 
 #include <time.h>
@@ -25,9 +26,9 @@
 #include <iostream>
 using namespace std;
 
-//#define ALGO1
+#define ALGO1
 //#define ALGO2
-#define ALGO3
+//#define ALGO3
 
 //#define _DEBUG_
 
@@ -93,8 +94,8 @@ int main(int argc, char *argv[]) {
 
 #ifdef _DEBUG_
 	cout << "Parameters:" << endl;
-	cout << "inputNodeFile: " << inputNodeFile << endl << "inputRoadFile: " << inputRoadFile << endl << "inputPolygonFile: " << endl << "sourceNode: " << sourceNode << endl;
-	cout << "destinationNode: " << destinationNode << endl << "outputShortestPathFile: " << outputShortestPathFile << endl << "outputStatFile: " << outputStatFile << endl;
+	cout << "\tinputNodeFile: " << inputNodeFile << endl << "\tinputRoadFile: " << inputRoadFile << endl << "\tinputPolygonFile: " << inputPolygonFile << endl << "\tsourceNode: " << sourceNode << endl;
+	cout << "\tdestinationNode: " << destinationNode << endl << "\toutputShortestPathFile: " << outputShortestPathFile << endl << "\toutputStatFile: " << outputStatFile << endl;
 #endif
 
 	// check input files
@@ -111,8 +112,9 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	// buffer
+	// buffers
 	unsigned char* buffer = new unsigned char[BUFFER_SIZE];
+	unsigned char* buffer2 = new unsigned char[BUFFER_SIZE];
 
 	// storages
 	RoadStore* roadStore = new RoadStore(BUFFER_SIZE);
@@ -124,6 +126,14 @@ int main(int argc, char *argv[]) {
 	// loading data from files
 	roadParser.loadNodeFile(inputNodeFile, buffer, BUFFER_SIZE, nodeStore);
 	roadParser.loadRoadFile(inputRoadFile, buffer, BUFFER_SIZE, roadStore);
+
+	int* array1 = new int[roadStore->storeSize];
+	int* array2 = new int[roadStore->storeSize];
+
+#ifdef ALGO1
+	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(array1);
+	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(array2);
+#endif
 
 #ifdef _DEBUG_
 	// print out general statistics
@@ -159,6 +169,7 @@ int main(int argc, char *argv[]) {
 	//algo->shortestPath(1, 10);
 	algo1->shortestPath(sourceNodeId, destinationNodeId);
 	//cout << "sp(50096828,48432214):" << algo1->result << endl;
+	algo1->reconstructPath(spDistance);
 #endif
 
 #ifdef ALGO2
@@ -183,6 +194,9 @@ int main(int argc, char *argv[]) {
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
+
+	ShortestPathWriter shortestPathWriter;
+	shortestPathWriter.write(spDistance, outputShortestPathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
 
 #ifdef ALGO1
 	delete algo1;

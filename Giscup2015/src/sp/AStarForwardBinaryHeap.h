@@ -12,6 +12,7 @@
 //#define _HEAPANALYSIS_
 //#define _HEAPSTATISTICS_
 
+#include "AStarForwardShortestPath.h"
 #include "ShortestPathAlgorithm.h"
 #include "../datastructure/BinaryHeap.h"
 #include "../data/NeighbourDataBase.h"
@@ -25,6 +26,7 @@ public:
 	int* closed;
 	BinaryHeap<double>* heap;
 	int* previous;
+	int* previousRoad;
 	double* gScore;
 
 	NodeStore* nodeStore;
@@ -33,6 +35,7 @@ public:
 	AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
 	~AStarForwardBinaryHeap();
 	void shortestPath(int fromId, int toId);
+	void reconstructPath(AStarForwardShortestPath* path);
 };
 
 

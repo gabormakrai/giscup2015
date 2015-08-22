@@ -31,6 +31,7 @@ AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataB
 
 	this->closed = new int[nodeStore->storeSize];
 	this->previous = new int[nodeStore->storeSize];
+	this->previousRoad = new int[nodeStore->storeSize];
 	this->gScore = new double[nodeStore->storeSize];
 	this->heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
 }
@@ -111,6 +112,7 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 		for (int i = 0; i < this->neighbourDataBase->count[current]; ++i) {
 			int neighbourIndex = this->neighbourDataBase->offset[current] + i;
 			int neighbour = this->neighbourDataBase->id[neighbourIndex];
+			int roadId = this->neighbourDataBase->roadId[neighbourIndex];
 
 			if (closed[neighbour] == 1) {
 				continue;
@@ -123,6 +125,7 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 
 			if (heap->lookupTable[neighbour] == -1 || gCandidate < gScore[neighbour]) {
 				previous[neighbour] = current;
+				previousRoad[neighbour] = roadId;
 				gScore[neighbour] = gCandidate;
 				heap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, to));
 			}
@@ -153,4 +156,20 @@ void AStarForwardBinaryHeap::shortestPath(int fromId, int toId) {
 	cout << "steps:" << steps << ", maxHeapSize: " << maxHeapSize << ", avgHeapSize: " << (double)avgHeapSize / (double)steps << endl;
 #endif
 
+}
+
+void AStarForwardBinaryHeap::reconstructPath(AStarForwardShortestPath* path) {
+
+	int currentNode = to;
+
+	while (true) {
+
+		path->addRoad(previousRoad[currentNode]);
+
+		currentNode = previous[currentNode];
+
+		if (currentNode == from) {
+			break;
+		}
+	}
 }
