@@ -29,7 +29,7 @@ using namespace std;
 //#define ALGO2
 #define ALGO3
 
-#define _DEBUG_
+//#define _DEBUG_
 
 #define BUFFER_SIZE 16384
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	if (argc == 1) { // TEST MODE
 		inputNodeFile = "/home/makrai/giscup2015/data/sfo_nodes.txt";
 		inputRoadFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
-		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
+		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
 		sourceNode = "50096828";
 		destinationNode = "48432214";
 //		inputNodeFile = "/home/makrai/giscup2015/data/example_nodes.txt";
@@ -131,6 +131,9 @@ int main(int argc, char *argv[]) {
 	cout << "#road: " << roadStore->size << endl;
 #endif
 
+	int sourceNodeId = atoi(sourceNode);
+	int destinationNodeId = atoi(destinationNode);
+
 	gettimeofday(&endDataRead, NULL);
 	gettimeofday(&startPre, NULL);
 
@@ -154,21 +157,21 @@ int main(int argc, char *argv[]) {
 #ifdef ALGO1
 	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
 	//algo->shortestPath(1, 10);
-	algo1->shortestPath(50096828,48432214);
+	algo1->shortestPath(sourceNodeId, destinationNodeId);
 	//cout << "sp(50096828,48432214):" << algo1->result << endl;
 #endif
 
 #ifdef ALGO2
 	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
 	//cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
-	algo2->shortestPath(50096828,48432214);
+	algo2->shortestPath(sourceNodeId, destinationNodeId);
 	//cout << "sp(50096828,48432214):" << algo2->result << endl;
 #endif
 
 #ifdef ALGO3
 	AStarBidirectionalBinaryHeap* algo3 = new AStarBidirectionalBinaryHeap(forwardNeighbour, backwardNeighbour, nodeStore, roadStore);
 	// cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
-	algo3->shortestPath(50096828,48432214);
+	algo3->shortestPath(sourceNodeId, destinationNodeId);
 	//cout << "sp(50096828,48432214):" << algo3->result << endl;
 #endif
 
