@@ -8,7 +8,7 @@
 #ifndef POLYGONPARSER_H_
 #define POLYGONPARSER_H_
 
-//#define _DEBUG_
+//#define _PDEBUG_
 
 #include "PolygonStore.h"
 

@@ -76,7 +76,7 @@ void PolygonParser::parse(const char* fileName, unsigned char* buffer, int buffe
 
 					if (fabs(ax - cx) + fabs(ay - cy) > 0.000001) {
 						polygonStore->addPolygon(ax, ay, bx, by, cx, cy);
-	#ifdef _DEBUG_
+	#ifdef _PDEBUG_
 						cout << "add polygon: ax:" << ax << ",ay:" << ay << ",bx:" << bx << ",by:" << by << ",cx:" << cx << ",cy:" << cy << endl;
 						bx = cx;
 						by = cy;
