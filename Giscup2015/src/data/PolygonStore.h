@@ -8,6 +8,8 @@
 #ifndef POLYGONSTORE_H_
 #define POLYGONSTORE_H_
 
+#define _DEBUG_
+
 #include "NodeStore.h"
 
 class PolygonStore {

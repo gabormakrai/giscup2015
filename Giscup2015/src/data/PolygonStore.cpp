@@ -7,6 +7,11 @@
 
 #include "PolygonStore.h"
 
+#ifdef _DEBUG_
+#include <iostream>
+using namespace std;
+#endif
+
 PolygonStore::PolygonStore(int initialStoreSize) {
 	size = 0;
 	storeSize = initialStoreSize;
@@ -74,8 +79,60 @@ void PolygonStore::addPolygon(double ax, double ay, double bx, double by, double
 	++size;
 }
 
+inline bool Sign(double p1x, double p1y, double p2x, double p2y, double p3x, double p3y) {
+	return ((p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y)) < 0.0;
+}
+
+inline int PointInTriangle(double x, double y, double ax, double ay, double bx, double by, double cx, double cy) {
+
+	bool b1 = Sign(x, y, ax, ay, bx, by);
+	bool b2 = Sign(x, y, bx, by, cx, cy);
+
+	if (b1 != b2 ) {
+		return 0;
+	}
+
+	bool b3 = Sign(x, y, cx, cy, ax, ay);
+
+	if (b2 != b3) {
+		return 0;
+	}
+
+	return 1;
+}
+
 void PolygonStore::doCalculation(int* bannedNodes, NodeStore* nodeStore) {
 
+	for (int i = 0; i < nodeStore->size; ++i) {
+		bannedNodes[i] = 0;
+	}
+
+	for (int p = 0; p < size; ++p) {
+		double pax = ax[p];
+		double pay = ay[p];
+		double pbx = bx[p];
+		double pby = by[p];
+		double pcx = cx[p];
+		double pcy = cy[p];
+
+		for (int i = 0; i < nodeStore->size; ++i) {
+
+			if (bannedNodes[i] == 1) {
+				continue;
+			}
+
+			double x = nodeStore->x[i];
+			double y = nodeStore->y[i];
+
+			int banned = PointInTriangle(x, y, pax, pay, pbx, pby, pcx, pcy);
+#ifdef _DEBUG_
+			if (banned == 1) {
+				cout << "found banned node: " << nodeStore->id[i] << endl;
+			}
+#endif
+			bannedNodes[i] = banned;
+		}
+	}
 }
 
 
