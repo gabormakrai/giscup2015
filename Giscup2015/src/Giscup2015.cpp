@@ -194,10 +194,18 @@ int main(int argc, char *argv[]) {
 	// cout << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
 	gettimeofday(&endSearch1, NULL);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO1)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heap_distance.csv", "/media/sf_ubuntu_shared_folder/algo1_closed_distance.csv", "/media/sf_ubuntu_shared_folder/algo1_sp_distance.csv", algo1);
+#endif
+#ifdef ALGO1
 	gettimeofday(&startSearch2, NULL);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_TIME);
 	// cout << algo1->result << endl;
 	algo1->reconstructPath(spTime);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO1)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heap_time.csv", "/media/sf_ubuntu_shared_folder/algo1_closed_time.csv", "/media/sf_ubuntu_shared_folder/algo1_sp_time.csv", algo1);
 #endif
 
 #ifdef ALGO2
