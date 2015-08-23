@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, NodeStore* nodeStore, RoadStore* roadStore) {
+void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, const char* polygonNodeFile, const char* polygonFile, NodeStore* nodeStore, RoadStore* roadStore, PolygonStore* polygonStore, int* bannedNodes) {
 
 	double* xNoise = new double[nodeStore->size];
 	double* yNoise = new double[nodeStore->size];
@@ -47,6 +47,39 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, No
 		double x2 = nodeStore->x[roadStore->endNode[i]] + xNoise[roadStore->endNode[i]];
 		double y2 = nodeStore->y[roadStore->endNode[i]] + yNoise[roadStore->endNode[i]];
 		fs << std::setprecision(16) << roadStore->edgeId[i] << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+	}
+
+	fs.close();
+
+	fs.open(polygonFile, std::fstream::out);
+	int polygonId = 0;
+
+	fs << "id;linestring" << std::endl;
+	for (int i = 0; i < polygonStore->size; ++i) {
+
+		double ax = polygonStore->ax[i];
+		double ay = polygonStore->ay[i];
+		double bx = polygonStore->bx[i];
+		double by = polygonStore->by[i];
+		double cx = polygonStore->cx[i];
+		double cy = polygonStore->cy[i];
+
+//		fs << std::setprecision(16) << (polygonId++) << ";POLYGON ((" << ax << " " << ay << ", " << bx << " " << by << ", " << cx << " " << cy << "))" << std::endl;
+		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << ax << " " << ay << "," << bx << " " << by << ")" << std::endl;
+		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << bx << " " << by << "," << cx << " " << cy << ")" << std::endl;
+		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << cx << " " << cy << "," << ax << " " << ay << ")" << std::endl;
+
+	}
+
+	fs.close();
+
+	fs.open(polygonNodeFile, std::fstream::out);
+	fs << "id,x,y" << std::endl;
+
+	for (int i = 0; i < nodeStore->size; ++i) {
+		if (bannedNodes[i] == 1) {
+			fs << std::setprecision(16) << nodeStore->id[i] << "," << nodeStore->x[i]+xNoise[i] << "," << nodeStore->y[i]+yNoise[i] << std::endl;
+		}
 	}
 
 	fs.close();
@@ -262,3 +295,4 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 	fs.close();
 
 }
+

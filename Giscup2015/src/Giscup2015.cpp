@@ -34,6 +34,7 @@ using namespace std;
 //#define ALGO3
 
 #define _DEBUG_
+#define _GISVISUALIZER_
 
 #define BUFFER_SIZE 16384
 
@@ -171,6 +172,11 @@ int main(int argc, char *argv[]) {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
+#ifdef _GISVISUALIZER_
+	GISVisualizer gisVisualizer;
+	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", "/media/sf_ubuntu_shared_folder/bannedNodes.csv", "/media/sf_ubuntu_shared_folder/polygons.csv", nodeStore, roadStore, polygonStore, array1);
+#endif
+
 	// create neighbourdatabase
 #if defined(ALGO1) || defined(ALGO3)
 	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD, array1);
@@ -211,8 +217,6 @@ int main(int argc, char *argv[]) {
 	gettimeofday(&endSearch2, NULL);
 	gettimeofday(&startDataWrite, NULL);
 
-//	GISVisualizer gisVisualizer;
-//	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", nodeStore, roadStore);
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
