@@ -142,13 +142,11 @@ int main(int argc, char *argv[]) {
 	roadParser.loadRoadFile(inputRoadFile, buffer, BUFFER_SIZE, roadStore);
 	PolygonParser.parse(inputPolygonFile, buffer, BUFFER_SIZE, polygonStore);
 
+	gettimeofday(&endDataRead, NULL);
+	gettimeofday(&startPre, NULL);
+
 	int* array1 = new int[roadStore->storeSize];
 	int* array2 = new int[roadStore->storeSize];
-
-#ifdef ALGO1
-	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(array1);
-	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(array2);
-#endif
 
 #ifdef _DEBUG_
 	// print out general statistics
@@ -157,11 +155,15 @@ int main(int argc, char *argv[]) {
 	cout << "#polygon: " << polygonStore->size << endl;
 #endif
 
+	polygonStore->doCalculation(array1, nodeStore);
+
+#ifdef ALGO1
+	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(array1);
+	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(array2);
+#endif
+
 	int sourceNodeId = atoi(sourceNode);
 	int destinationNodeId = atoi(destinationNode);
-
-	gettimeofday(&endDataRead, NULL);
-	gettimeofday(&startPre, NULL);
 
 	// reassign id for nodes
 	nodeStore->sort();

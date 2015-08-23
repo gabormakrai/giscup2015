@@ -82,7 +82,10 @@ void PolygonParser::parse(const char* fileName, unsigned char* buffer, int buffe
 				if (buffer[i] == '<') {
 					state = 10;
 				}
-
+			} else if (state == 10 && buffer[i] == 10) {
+				var1 = 0;
+				var2 = 0;
+				state = 0;
 			}
 		}
 	}
