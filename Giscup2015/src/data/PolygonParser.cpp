@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <stdlib.h>
+#include <cmath>
 
 #ifdef _DEBUG_
 #include <iostream>
@@ -72,12 +73,16 @@ void PolygonParser::parse(const char* fileName, unsigned char* buffer, int buffe
 				} else {
 					cx = atof(XChar);
 					cy = atof(YChar);
-					polygonStore->addPolygon(ax, ay, bx, by, cx, cy);
-#ifdef _DEBUG_
-					cout << "add polygon: ax:" << ax << ",ay:" << ay << ",bx:" << bx << ",by:" << by << ",cx:" << cx << ",cy:" << cy << endl;
-					bx = cx;
-					by = cy;
-#endif
+
+					if (fabs(ax - cx) + fabs(ay - cy) > 0.000001) {
+						polygonStore->addPolygon(ax, ay, bx, by, cx, cy);
+	#ifdef _DEBUG_
+						cout << "add polygon: ax:" << ax << ",ay:" << ay << ",bx:" << bx << ",by:" << by << ",cx:" << cx << ",cy:" << cy << endl;
+						bx = cx;
+						by = cy;
+	#endif
+
+					}
 				}
 				if (buffer[i] == '<') {
 					state = 10;
