@@ -23,7 +23,7 @@ public:
 	double* distanceWeight;
 	double* timeWeight;
 	int* roadId;
-	NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode);
+	NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode, int* bannedNodes);
 	~NeighbourDataBase();
 	void setWeight(int mode);
 };

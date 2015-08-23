@@ -12,7 +12,7 @@
 using namespace std;
 #endif
 
-NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode) {
+NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode, int* bannedNodes) {
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[roadStore->storeSize];
@@ -29,6 +29,9 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 	if (mode == NEIGHBOURDATABASE_FORWARD) {
 
 		for (int i = 0; i < roadStore->size; ++i) {
+			if (bannedNodes[roadStore->startNode[i]] == 1 || bannedNodes[roadStore->endNode[i]] == 1) {
+				continue;
+			}
 			++this->count[roadStore->startNode[i]];
 		}
 
@@ -41,6 +44,9 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 		}
 
 		for (int i = 0; i < roadStore->size; ++i) {
+			if (bannedNodes[roadStore->startNode[i]] == 1 || bannedNodes[roadStore->endNode[i]] == 1) {
+				continue;
+			}
 			int from = roadStore->startNode[i];
 			int to = roadStore->endNode[i];
 			int id = this->offset[from] + this->count[from];

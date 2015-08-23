@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
 
 	// create neighbourdatabase
 #if defined(ALGO1) || defined(ALGO3)
-	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD);
+	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD, array1);
 #endif
 #if defined(ALGO2) || defined(ALGO3)
 	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
