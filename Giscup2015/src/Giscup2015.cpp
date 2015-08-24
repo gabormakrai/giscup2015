@@ -34,13 +34,16 @@ using namespace std;
 //#define ALGO2
 //#define ALGO3
 
-//#define _DEBUG_
+#define _DEBUG_
 //#define _GISVISUALIZER_
+#define _CONSOLE_
 
 #define BUFFER_SIZE 16384
 
 void showElapsedTime(struct timeval start, struct timeval end) {
+#ifdef _CONSOLE_
 	cout << (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec) << endl;
+#endif
 }
 
 double calculateElapsedTime(struct timeval start, struct timeval end) {
@@ -152,11 +155,30 @@ int main(int argc, char *argv[]) {
 	roadParser.loadRoadFile(inputRoadFile, buffer, BUFFER_SIZE, roadStore);
 	PolygonParser.parse(inputPolygonFile, buffer, BUFFER_SIZE, polygonStore);
 
+	// allocating the necessary memory
+
+	int* sp1 = new int[roadStore->storeSize];
+	int* sp2 = new int[roadStore->storeSize];
+	int* bannedNodes = sp1;
+
+	int* simplyStartNode = new int[roadStore->storeSize];
+	int* simplyEndNode = new int[roadStore->storeSize];
+	double* simplyLength = new double[roadStore->storeSize];
+	double* simplyTime = new double[roadStore->storeSize];
+	int* simplySeekOffset = new int[roadStore->storeSize];
+	int* simplySeekCount = new int[roadStore->storeSize];
+	int* simplySeek = new int[roadStore->storeSize];
+	int* simplySeekLength = new int[roadStore->storeSize];
+
+	int* array1 = new int[nodeStore->storeSize];
+	int* array2 = new int[nodeStore->storeSize];
+	int* array3 = new int[nodeStore->storeSize];
+	int* array4 = new int[nodeStore->storeSize];
+	int* array5 = new int[roadStore->storeSize];
+	int* array6 = new int[nodeStore->storeSize];
+
 	gettimeofday(&endDataRead, NULL);
 	gettimeofday(&startPre, NULL);
-
-	int* array1 = new int[roadStore->storeSize];
-	int* array2 = new int[roadStore->storeSize];
 
 #ifdef _DEBUG_
 	// print out general statistics
@@ -165,19 +187,19 @@ int main(int argc, char *argv[]) {
 	cout << "#polygon: " << polygonStore->size << endl;
 #endif
 
-	polygonStore->doCalculation(array1, nodeStore, POLYGON_SEQUENTIAL);
+	polygonStore->doCalculation(bannedNodes, nodeStore, POLYGON_SEQUENTIAL);
 
 #ifdef _DEBUG_
 	int bannedNodeCounter = 0;
 	for (int i = 0; i < nodeStore->size; ++i) {
-		bannedNodeCounter += array1[i];
+		bannedNodeCounter += bannedNodes[i];
 	}
 	cout << "#bannedNodes: " << bannedNodeCounter << endl;
 #endif
 
 #ifdef ALGO1
-	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(array1);
-	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(array2);
+	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(sp1);
+	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(sp2);
 #endif
 
 	int sourceNodeId = atoi(sourceNode);
@@ -197,7 +219,9 @@ int main(int argc, char *argv[]) {
 	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", "/media/sf_ubuntu_shared_folder/bannedNodes.csv", "/media/sf_ubuntu_shared_folder/polygons.csv", nodeStore, roadStore, polygonStore, array1);
 #endif
 
-	SimplifiedRoadStore* simplifiedRoadStore = new SimplifiedRoadStore(nodeStore, roadStore, sourceNodeIndex, destinationNodeIndex, ROADSIMPLIFICATION_SIMPLIFIED);
+	SimplifiedRoadStore* simplifiedRoadStore = new SimplifiedRoadStore(nodeStore, roadStore, sourceNodeIndex, destinationNodeIndex, ROADSIMPLIFICATION_SIMPLIFIED,
+		simplyStartNode, simplyEndNode, simplyLength, simplyTime, simplySeekOffset, simplySeekCount, simplySeek, simplySeekLength,
+		array1, array2, array3, array4, array5, array6);
 
 #ifdef _GISVISUALIZER_
 	gisVisualizer.writeSimplifiedRoads("/media/sf_ubuntu_shared_folder/simplifiedRoads.csv", nodeStore, simplifiedRoadStore);
@@ -210,7 +234,7 @@ int main(int argc, char *argv[]) {
 
 	// create neighbourdatabase
 #if defined(ALGO1) || defined(ALGO3)
-	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, simplifiedRoadStore, NEIGHBOURDATABASE_FORWARD, array1);
+	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, simplifiedRoadStore, NEIGHBOURDATABASE_FORWARD, sp1);
 #endif
 #if defined(ALGO2) || defined(ALGO3)
 	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
@@ -287,6 +311,8 @@ int main(int argc, char *argv[]) {
 	delete algo3;
 #endif
 
+	delete simplifiedRoadStore;
+
 	// dispose storages
 	delete roadStore;
 	delete nodeStore;
@@ -307,8 +333,24 @@ int main(int argc, char *argv[]) {
 	delete [] buffer;
 	delete [] buffer2;
 
+	delete [] sp1;
+	delete [] sp2;
+
+	delete [] simplyStartNode;
+	delete [] simplyEndNode;
+	delete [] simplyLength;
+	delete [] simplyTime;
+	delete [] simplySeekOffset;
+	delete [] simplySeekCount;
+	delete [] simplySeek;
+	delete [] simplySeekLength;
+
 	delete [] array1;
 	delete [] array2;
+	delete [] array3;
+	delete [] array4;
+	delete [] array5;
+	delete [] array6;
 
 	gettimeofday(&endDataWrite, NULL);
 

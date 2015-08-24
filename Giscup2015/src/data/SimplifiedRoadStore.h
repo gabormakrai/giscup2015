@@ -30,7 +30,9 @@ public:
 	int* seek;
 	int* seekLength;
 
-	SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int source, int destination, int mode);
+	SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int source, int destination, int mode,
+		int* startNode, int* endNode, double* length, double* time, int* seekOffset, int* seekCount, int* seek, int* seekLength,
+		int* array1, int* array2, int* array3, int* array4, int* array5, int* array6);
 	~SimplifiedRoadStore();
 };
 

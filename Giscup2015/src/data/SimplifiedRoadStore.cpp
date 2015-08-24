@@ -12,22 +12,22 @@
 using namespace std;
 #endif
 
-SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int source, int destination, int mode) {
+SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int source, int destination, int mode,
+	int* simplyStartNode, int* simplyEndNode, double* simplyLength, double* simplyTime, int* simplySeekOffset, int* simplySeekCount, int* simplySeek, int* simplySeekLength,
+	int* array1, int* array2, int* array3, int* array4, int* array5, int* array6) {
 
 	if (mode == ROADSIMPLIFICATION_NORMAL) {
 
 		storeSize = roadStore->storeSize;
-		startNode = new int[storeSize];
-		endNode = new int[storeSize];
-		length = new double[storeSize];
-		time = new double[storeSize];
+		this->startNode = simplyStartNode;
+		this->endNode = simplyEndNode;
+		this->length = simplyLength;
+		this->time = simplyTime;
 
-		seekOffset = new int[storeSize];
-		seekCount = new int[storeSize];
-//		seek = new int[storeSize * 2];
-//		seekLength = new int[storeSize * 2];
-		seek = new int[storeSize];
-		seekLength = new int[storeSize];
+		this->seekOffset = simplySeekOffset;
+		this->seekCount = simplySeekCount;
+		this->seek = simplySeek;
+		this->seekLength = simplySeekLength;
 
 		size = 0;
 
@@ -53,22 +53,24 @@ SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadSt
 		}
 	} else {
 		storeSize = roadStore->storeSize;
-		startNode = new int[storeSize];
-		endNode = new int[storeSize];
-		length = new double[storeSize];
-		time = new double[storeSize];
+		this->startNode = simplyStartNode;
+		this->endNode = simplyEndNode;
+		this->length = simplyLength;
+		this->time = simplyTime;
 
-		seekOffset = new int[storeSize];
-		seekCount = new int[storeSize];
-		seek = new int[storeSize];
-		seekLength = new int[storeSize];
+		this->seekOffset = simplySeekOffset;
+		this->seekCount = simplySeekCount;
+		this->seek = simplySeek;
+		this->seekLength = simplySeekLength;
 
 		size = 0;
 
-		int* inDegree = new int[nodeStore->storeSize];
-		int* outDegree = new int[nodeStore->storeSize];
-		int* inRoad = new int[nodeStore->storeSize];
-		int* outRoad = new int[nodeStore->storeSize];
+		int* inDegree = array1;
+		int* outDegree = array2;
+		int* inRoad = array3;
+		int* outRoad = array4;
+		int* simplifiedRoad = array5;
+		int* backwardChain = array6;
 
 		for (int i = 0; i < nodeStore->size; ++i) {
 			inDegree[i] = 0;
@@ -91,7 +93,6 @@ SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadSt
 		inDegree[destination] = 0;
 		outDegree[destination] = 0;
 
-		int* simplifiedRoad = new int[roadStore->storeSize];
 		for (int i = 0; i < roadStore->size; ++i) {
 			simplifiedRoad[i] = 0;
 		}
@@ -108,8 +109,6 @@ SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadSt
 #endif
 
 		int seekIndex = size;
-
-		int* backwardChain = new int[roadStore->storeSize];
 
 		for (int i = 0; i < nodeStore->size; ++i) {
 			if (inDegree[i] == 1 && outDegree[i] == 1) {
