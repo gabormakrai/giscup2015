@@ -27,12 +27,12 @@ void PolygonParser::parse(const char* fileName, unsigned char* buffer, int buffe
 	char XChar[32];
 	char YChar[32];
 
-	double ax;
-	double ay;
-	double bx;
-	double by;
-	double cx;
-	double cy;
+	double ax = 0.0;
+	double ay = 0.0;
+	double bx = 0.0;
+	double by = 0.0;
+	double cx = 0.0;
+	double cy = 0.0;
 
 	while (!feof(source)) {
 		int readedBytes = fread(buffer, 1, bufferSize, source);
