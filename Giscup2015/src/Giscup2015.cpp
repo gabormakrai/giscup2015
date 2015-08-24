@@ -165,7 +165,15 @@ int main(int argc, char *argv[]) {
 	cout << "#polygon: " << polygonStore->size << endl;
 #endif
 
-	polygonStore->doCalculation(array1, nodeStore);
+	polygonStore->doCalculation(array1, nodeStore, POLYGON_SEQUENTIAL);
+
+#ifdef _DEBUG_
+	int bannedNodeCounter = 0;
+	for (int i = 0; i < nodeStore->size; ++i) {
+		bannedNodeCounter += array1[i];
+	}
+	cout << "#bannedNodes: " << bannedNodeCounter << endl;
+#endif
 
 #ifdef ALGO1
 	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(array1);

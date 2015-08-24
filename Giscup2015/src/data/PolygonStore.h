@@ -10,6 +10,9 @@
 
 //#define _DEBUG_
 
+#define POLYGON_SEQUENTIAL 0
+#define POLYGON_SORT 1
+
 #include "NodeStore.h"
 
 class PolygonStore {
@@ -25,7 +28,7 @@ public:
 	PolygonStore(int initialStoreSize);
 	~PolygonStore();
 	void addPolygon(double ax, double ay, double bx, double by, double cx, double cy);
-	void doCalculation(int* bannedNodes, NodeStore* nodeStore);
+	void doCalculation(int* bannedNodes, NodeStore* nodeStore, int mode);
 };
 
 
