@@ -19,6 +19,7 @@ RoadStore::RoadStore(int initialStoreSize) {
 	length = new double[initialStoreSize];
 	speedLimit = new double[initialStoreSize];
 	positionInFile = new int[initialStoreSize];
+	lengthInFile = new int[initialStoreSize];
 	size = 0;
 	storeSize = initialStoreSize;
 }
@@ -30,9 +31,10 @@ RoadStore::~RoadStore() {
 	delete [] length;
 	delete [] speedLimit;
 	delete [] positionInFile;
+	delete [] lengthInFile;
 }
 
-void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit, int positionInFile) {
+void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit, int positionInFile, int lengthInFile) {
 	if (size == storeSize) {
 		int newSize = size * 2;
 		int* newEdgeId = new int[newSize];
@@ -41,6 +43,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		double* newLength = new double[newSize];
 		double* newSpeedLimit = new double[newSize];
 		int* newPositionInFile = new int[newSize];
+		int* newLengthInFile = new int[newSize];
 
 		for (int i = 0; i < size; ++i) {
 			newEdgeId[i] = this->roadId[i];
@@ -49,6 +52,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 			newLength[i] = this->length[i];
 			newSpeedLimit[i] = this->speedLimit[i];
 			newPositionInFile[i] = this->positionInFile[i];
+			newLengthInFile[i] = this->lengthInFile[i];
 		}
 
 		delete [] this->roadId;
@@ -57,6 +61,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		delete [] this->length;
 		delete [] this->speedLimit;
 		delete [] this->positionInFile;
+		delete [] this->lengthInFile;
 
 		this->roadId = newEdgeId;
 		this->startNode = newStartNode;
@@ -64,6 +69,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		this->length = newLength;
 		this->speedLimit = newSpeedLimit;
 		this->positionInFile = newPositionInFile;
+		this->lengthInFile = newLengthInFile;
 
 		storeSize = newSize;
 	}
@@ -74,6 +80,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 	this->length[size] = length;
 	this->speedLimit[size] = speedLimit;
 	this->positionInFile[size] = positionInFile;
+	this->lengthInFile[size] = lengthInFile;
 
 	++size;
 }

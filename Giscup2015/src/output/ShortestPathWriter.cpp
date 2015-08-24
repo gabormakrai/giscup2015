@@ -15,7 +15,7 @@
 using namespace std;
 #endif
 
-void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const char* roadFile, RoadStore* roadStore, NodeStore* nodeStore, unsigned char* buffer, unsigned char* buffer2, int bufferSize) {
+void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const char* roadFile, SimplifiedRoadStore* simplifiedRoadStore, NodeStore* nodeStore, unsigned char* buffer, unsigned char* buffer2, int bufferSize) {
 
 	FILE* source = fopen(roadFile, "r");
 	std::ofstream output;
@@ -27,44 +27,49 @@ void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const cha
 
 	for (sp->init(); sp->hasNext();) {
 
-		int pos = 0;
 		int road = sp->next();
 
-		sp->length += roadStore->length[road];
-		sp->time += roadStore->length[road] / roadStore->speedLimit[road];
+		sp->length += simplifiedRoadStore->length[road];
+		sp->time += simplifiedRoadStore->length[road] / simplifiedRoadStore->speedLimit[road];
 
-		int seek = roadStore->positionInFile[road];
-		int length = (road + 1) == roadStore->size ? -1 : roadStore->positionInFile[road + 1] - seek;
+		for (int i = 0; i < simplifiedRoadStore->seekCount[road]; ++i) {
+			int index = simplifiedRoadStore->seekOffset[road] + i;
 
-#ifdef _DEBUG_
-		int sNode = roadStore->startNode[road];
-		int eNode = roadStore->endNode[road];
-		cout << "roadId:" << roadStore->edgeId[road] << " -> " << nodeStore->id[sNode] << " -> " << nodeStore->id[eNode] << endl;
-		cout << "seek:" << seek << ", length: " << length << endl;
-#endif
+			int seek = simplifiedRoadStore->seek[index];
+			int length = simplifiedRoadStore->seekLength[index];
 
-		fseek(source, seek, SEEK_SET);
+	#ifdef _DEBUG_
+			int sNode = simplifiedRoadStore->startNode[road];
+			int eNode = simplifiedRoadStore->endNode[road];
+			// cout << "roadId:" << simplifiedRoadStore->roadId[road] << " -> " << nodeStore->id[sNode] << " -> " << nodeStore->id[eNode] << endl;
+			cout << "seek:" << seek << ", length: " << length << endl;
+	#endif
+			int pos = 0;
 
-		while (!feof(source)) {
-			int readedBytes = fread(buffer, 1, bufferSize, source);
-			for (int i = 0; i < readedBytes; ++i) {
-				buffer2[pos] = buffer[i];
-				++pos;
+			fseek(source, seek, SEEK_SET);
+
+			while (!feof(source)) {
+				int readedBytes = fread(buffer, 1, bufferSize, source);
+				for (int i = 0; i < readedBytes; ++i) {
+					buffer2[pos] = buffer[i];
+					++pos;
+					if (pos == length) {
+						break;
+					}
+				}
 				if (pos == length) {
 					break;
 				}
 			}
-			if (pos == length) {
-				break;
-			}
+
+			buffer2[pos] = 0;
+
+			output << buffer2;
+	#ifdef _DEBUG_
+			cout << buffer2;
+	#endif
 		}
 
-		buffer2[pos] = 0;
-
-		output << buffer2;
-#ifdef _DEBUG_
-		cout << buffer2;
-#endif
 	}
 
 	output.close();

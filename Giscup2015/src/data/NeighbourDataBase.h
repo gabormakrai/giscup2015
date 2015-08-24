@@ -9,7 +9,7 @@
 #define NEIGHBOURDATABASE_H_
 
 #include "NodeStore.h"
-#include "RoadStore.h"
+#include "SimplifiedRoadStore.h"
 
 #define NEIGHBOURDATABASE_FORWARD 0
 #define NEIGHBOURDATABASE_BACKWARD 1
@@ -23,7 +23,7 @@ public:
 	double* distanceWeight;
 	double* timeWeight;
 	int* roadId;
-	NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode, int* bannedNodes);
+	NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* simplifiedRoadStore, int mode, int* bannedNodes);
 	~NeighbourDataBase();
 	void setWeight(int mode);
 };

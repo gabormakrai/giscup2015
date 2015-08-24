@@ -9,14 +9,14 @@
 #define SHORTESTPATHWRITER_H_
 
 #include "../sp/ShortestPath.h"
-#include "../data/RoadStore.h"
+#include "../data/SimplifiedRoadStore.h"
 #include "../data/NodeStore.h"
 
 //#define _DEBUG_
 
 class ShortestPathWriter {
 public:
-	void write(ShortestPath* sp, const char* fileName, const char* roadFile, RoadStore* roadStore, NodeStore* nodeStore, unsigned char* buffer, unsigned char* buffer2, int bufferSize);
+	void write(ShortestPath* sp, const char* fileName, const char* roadFile, SimplifiedRoadStore* simplifiedRoadStore, NodeStore* nodeStore, unsigned char* buffer, unsigned char* buffer2, int bufferSize);
 };
 
 #endif /* SHORTESTPATHWRITER_H_ */

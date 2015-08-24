@@ -12,6 +12,7 @@
 #include "data/NeighbourDataBase.h"
 #include "data/PolygonStore.h"
 #include "data/PolygonParser.h"
+#include "data/SimplifiedRoadStore.h"
 
 #include "sp/ShortestPathAlgorithm.h"
 #include "sp/AStarForwardBinaryHeap.h"
@@ -33,8 +34,8 @@ using namespace std;
 //#define ALGO2
 //#define ALGO3
 
-#define _DEBUG_
-#define _GISVISUALIZER_
+//#define _DEBUG_
+//#define _GISVISUALIZER_
 
 #define BUFFER_SIZE 16384
 
@@ -76,16 +77,21 @@ int main(int argc, char *argv[]) {
 	const char* outputStatFile;
 
 	if (argc == 1) { // TEST MODE
-		inputNodeFile = "/home/makrai/giscup2015/data/sfo_nodes.txt";
-		inputRoadFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
-		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
-		sourceNode = "50096828";
-		destinationNode = "48432214";
-//		inputNodeFile = "/home/makrai/giscup2015/data/example_nodes.txt";
+//		inputNodeFile = "/home/makrai/giscup2015/data/sfo_nodes.txt";
+//		inputRoadFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
+//		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
+//		sourceNode = "50096828";
+//		destinationNode = "48432214";
+//		inputNodeFile = "/home/makrai/giscup2015/data/example_nodes.txlt";
 //		inputRoadFile = "/home/makrai/giscup2015/data/example_roads.txt";
 //		inputPolygonFile = "/home/makrai/giscup2015/data/example_roads.txt";
 //		sourceNode = "1";
 //		destinationNode = "10";
+		inputNodeFile = "/home/makrai/giscup2015/data/example2_nodes.txt";
+		inputRoadFile = "/home/makrai/giscup2015/data/example2_roads.txt";
+		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
+		sourceNode = "6";
+		destinationNode = "20";
 		outputShortestDistancePathFile = "/media/sf_ubuntu_shared_folder/output_SP_distance.txt";
 		outputShortestTimePathFile = "/media/sf_ubuntu_shared_folder/output_SP_time.txt";
 		outputStatFile = "/media/sf_ubuntu_shared_folder/output_Stat.txt";
@@ -177,9 +183,11 @@ int main(int argc, char *argv[]) {
 	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", "/media/sf_ubuntu_shared_folder/bannedNodes.csv", "/media/sf_ubuntu_shared_folder/polygons.csv", nodeStore, roadStore, polygonStore, array1);
 #endif
 
+	SimplifiedRoadStore* simplifiedRoadStore = new SimplifiedRoadStore(nodeStore, roadStore, ROADSIMPLIFICATION_NORMAL);
+
 	// create neighbourdatabase
 #if defined(ALGO1) || defined(ALGO3)
-	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_FORWARD, array1);
+	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, simplifiedRoadStore, NEIGHBOURDATABASE_FORWARD, array1);
 #endif
 #if defined(ALGO2) || defined(ALGO3)
 	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
@@ -230,8 +238,8 @@ int main(int argc, char *argv[]) {
 //	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
 
 	ShortestPathWriter shortestPathWriter;
-	shortestPathWriter.write(spDistance, outputShortestDistancePathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
-	shortestPathWriter.write(spTime, outputShortestTimePathFile, inputRoadFile, roadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
+	shortestPathWriter.write(spDistance, outputShortestDistancePathFile, inputRoadFile, simplifiedRoadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
+	shortestPathWriter.write(spTime, outputShortestTimePathFile, inputRoadFile, simplifiedRoadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
 
 #ifdef _DEBUG_
 	cout << "ShortestPathDistance: length: " << spDistance->length << ", time: " << spDistance->time << endl;

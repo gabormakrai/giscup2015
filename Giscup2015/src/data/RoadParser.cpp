@@ -146,7 +146,7 @@ void RoadParser::loadRoadFile(const char* fileName, unsigned char* buffer, int b
 				if (currentStart != 0) {
 					++currentStart;
 				}
-				roadStore->addRoad(id, startNodeId, endNodeId, length, speedLimit, currentStart);
+				roadStore->addRoad(id, startNodeId, endNodeId, length, speedLimit, currentStart, positionInFile - currentStart + 1);
 				currentStart = positionInFile;
 #ifdef _DEBUG_
 				cout << "RoadParser: adding new road(id:" << id << ",startNode:" << startNodeId << ",endNodeId:" << endNodeId << ",length:" << length << ",speedLimit:" << speedLimit << ")" << endl;

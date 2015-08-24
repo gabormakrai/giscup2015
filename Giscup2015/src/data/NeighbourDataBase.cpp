@@ -12,14 +12,14 @@
 using namespace std;
 #endif
 
-NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore, int mode, int* bannedNodes) {
+NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* simplifiedRoadStore, int mode, int* bannedNodes) {
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
-	this->id = new int[roadStore->storeSize];
-	this->distanceWeight = new double[roadStore->storeSize];
-	this->timeWeight = new double[roadStore->storeSize];
+	this->id = new int[simplifiedRoadStore->storeSize];
+	this->distanceWeight = new double[simplifiedRoadStore->storeSize];
+	this->timeWeight = new double[simplifiedRoadStore->storeSize];
 	this->weight = distanceWeight;
-	this->roadId = new int[roadStore->storeSize];
+	this->roadId = new int[simplifiedRoadStore->storeSize];
 
 	for (int i = 0; i < nodeStore->size; ++i) {
 		this->count[i] = 0;
@@ -28,11 +28,11 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 
 	if (mode == NEIGHBOURDATABASE_FORWARD) {
 
-		for (int i = 0; i < roadStore->size; ++i) {
-			if (bannedNodes[roadStore->startNode[i]] == 1 || bannedNodes[roadStore->endNode[i]] == 1) {
+		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
+			if (bannedNodes[simplifiedRoadStore->startNode[i]] == 1 || bannedNodes[simplifiedRoadStore->endNode[i]] == 1) {
 				continue;
 			}
-			++this->count[roadStore->startNode[i]];
+			++this->count[simplifiedRoadStore->startNode[i]];
 		}
 
 		for (int i = 1; i < nodeStore->size; ++i) {
@@ -43,17 +43,17 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			this->count[i] = 0;
 		}
 
-		for (int i = 0; i < roadStore->size; ++i) {
-			if (bannedNodes[roadStore->startNode[i]] == 1 || bannedNodes[roadStore->endNode[i]] == 1) {
+		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
+			if (bannedNodes[simplifiedRoadStore->startNode[i]] == 1 || bannedNodes[simplifiedRoadStore->endNode[i]] == 1) {
 				continue;
 			}
-			int from = roadStore->startNode[i];
-			int to = roadStore->endNode[i];
+			int from = simplifiedRoadStore->startNode[i];
+			int to = simplifiedRoadStore->endNode[i];
 			int id = this->offset[from] + this->count[from];
 			++this->count[from];
 			this->id[id] = to;
-			this->distanceWeight[id] = roadStore->length[i];
-			this->timeWeight[id] = roadStore->length[i] / roadStore->speedLimit[i];
+			this->distanceWeight[id] = simplifiedRoadStore->length[i];
+			this->timeWeight[id] = simplifiedRoadStore->length[i] / simplifiedRoadStore->speedLimit[i];
 			this->roadId[id] = i;
 		}
 
@@ -70,8 +70,8 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 		}
 #endif
 	} else {
-		for (int i = 0; i < roadStore->size; ++i) {
-			++this->count[roadStore->endNode[i]];
+		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
+			++this->count[simplifiedRoadStore->endNode[i]];
 		}
 
 		for (int i = 1; i < nodeStore->size; ++i) {
@@ -82,14 +82,14 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, RoadStore* roadStore,
 			this->count[i] = 0;
 		}
 
-		for (int i = 0; i < roadStore->size; ++i) {
-			int from = roadStore->startNode[i];
-			int to = roadStore->endNode[i];
+		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
+			int from = simplifiedRoadStore->startNode[i];
+			int to = simplifiedRoadStore->endNode[i];
 			int id = this->offset[to] + this->count[to];
 			++this->count[to];
 			this->id[id] = from;
-			this->distanceWeight[id] = roadStore->length[i];
-			this->timeWeight[id] = roadStore->length[i] / roadStore->speedLimit[i];
+			this->distanceWeight[id] = simplifiedRoadStore->length[i];
+			this->timeWeight[id] = simplifiedRoadStore->length[i] / simplifiedRoadStore->speedLimit[i];
 			this->roadId[id] = i;
 		}
 
