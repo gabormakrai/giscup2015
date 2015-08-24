@@ -30,7 +30,7 @@ public:
 	NodeStore* nodeStore;
 	NeighbourDataBase* neighbourDataBase;
 
-	AStarBackwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore);
+	AStarBackwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore, int* heapLookupTable, int* heapNodeArray, double* heapValueArray);
 	~AStarBackwardBinaryHeap();
 	void shortestPath(int fromId, int toId);
 };

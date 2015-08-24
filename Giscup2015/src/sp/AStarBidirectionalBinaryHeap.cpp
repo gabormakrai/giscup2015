@@ -33,8 +33,8 @@ AStarBidirectionalBinaryHeap::AStarBidirectionalBinaryHeap(NeighbourDataBase* fo
 	this->backwardGScore = new double[nodeStore->storeSize];
 	this->next = new int[nodeStore->storeSize];
 	this->previous = new int[nodeStore->storeSize];
-	this->forwardHeap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
-	this->backwardHeap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
+	this->forwardHeap = 0; //new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
+	this->backwardHeap = 0; //new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
 }
 
 AStarBidirectionalBinaryHeap::~AStarBidirectionalBinaryHeap() {

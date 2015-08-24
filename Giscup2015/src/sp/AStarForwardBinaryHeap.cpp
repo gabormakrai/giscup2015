@@ -24,7 +24,7 @@ using namespace std;
 
 #include <limits>
 
-AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore) {
+AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore, int* heapLookupTable, int* heapNodeArray, double* heapValueArray) {
 
 	this->nodeStore = nodeStore;
 	this->neighbourDataBase = neighbourDataBase;
@@ -33,7 +33,7 @@ AStarForwardBinaryHeap::AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataB
 	this->previous = new int[nodeStore->storeSize];
 	this->previousRoad = new int[nodeStore->storeSize];
 	this->gScore = new double[nodeStore->storeSize];
-	this->heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
+	this->heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), heapLookupTable, heapNodeArray, heapValueArray);
 }
 
 AStarForwardBinaryHeap::~AStarForwardBinaryHeap() {

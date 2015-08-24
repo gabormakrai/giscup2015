@@ -13,21 +13,18 @@ using namespace std;
 #endif
 
 template <class T>
-BinaryHeap<T>::BinaryHeap(int initialSize, T zeroValue, T maxValue) {
+BinaryHeap<T>::BinaryHeap(int initialSize, T zeroValue, T maxValue, int* heapLookupTable, int* heapNodeArray, T* heapValueArray) {
 	this->size = 0;
 	this->heapSize = initialSize;
-	this->lookupTable = new int[initialSize];
-	this->nodeArray = new int[initialSize];
-	this->valueArray = new T[initialSize];
+	this->lookupTable = heapLookupTable;
+	this->nodeArray = heapNodeArray;
+	this->valueArray = heapValueArray;
 	this->zeroValue = zeroValue;
 	this->maxValue = maxValue;
 }
 
 template <class T>
 BinaryHeap<T>::~BinaryHeap() {
-	delete [] lookupTable;
-	delete [] nodeArray;
-	delete [] valueArray;
 }
 
 template <class T>

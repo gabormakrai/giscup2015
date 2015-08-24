@@ -18,7 +18,7 @@ public:
 	int* lookupTable;
 	T* valueArray;
 	int* nodeArray;
-	BinaryHeap(int initialSize, T zeroValue, T maxValue);
+	BinaryHeap(int initialSize, T zeroValue, T maxValue, int* heapLookupTable, int* heapNodeArray, T* heapValueArray);
 	~BinaryHeap();
 	void init(int sourceNode, T sourceValue);
 	int extractMin();

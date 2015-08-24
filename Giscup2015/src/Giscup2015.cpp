@@ -176,6 +176,7 @@ int main(int argc, char *argv[]) {
 	int* array4 = new int[nodeStore->storeSize];
 	int* array5 = new int[roadStore->storeSize];
 	int* array6 = new int[nodeStore->storeSize];
+	double* array7 = new double[nodeStore->storeSize];
 
 	gettimeofday(&endDataRead, NULL);
 	gettimeofday(&startPre, NULL);
@@ -244,7 +245,7 @@ int main(int argc, char *argv[]) {
 	gettimeofday(&startSearch1, NULL);
 
 #ifdef ALGO1
-	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore);
+	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore, array1, array2, array7);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
 	// cout << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
@@ -351,6 +352,7 @@ int main(int argc, char *argv[]) {
 	delete [] array4;
 	delete [] array5;
 	delete [] array6;
+	delete [] array7;
 
 	gettimeofday(&endDataWrite, NULL);
 
