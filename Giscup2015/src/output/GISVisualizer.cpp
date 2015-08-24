@@ -46,7 +46,7 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, co
 		double y1 = nodeStore->y[roadStore->startNode[i]] + yNoise[roadStore->startNode[i]];
 		double x2 = nodeStore->x[roadStore->endNode[i]] + xNoise[roadStore->endNode[i]];
 		double y2 = nodeStore->y[roadStore->endNode[i]] + yNoise[roadStore->endNode[i]];
-		fs << std::setprecision(16) << roadStore->edgeId[i] << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+		fs << std::setprecision(16) << roadStore->roadId[i] << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
 	}
 
 	fs.close();

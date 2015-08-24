@@ -12,7 +12,7 @@
 
 class RoadStore {
 public:
-	int* edgeId;
+	int* roadId;
 	int* startNode;
 	int* endNode;
 	double* length;

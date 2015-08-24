@@ -13,7 +13,7 @@ using namespace std;
 #endif
 
 RoadStore::RoadStore(int initialStoreSize) {
-	edgeId = new int[initialStoreSize];
+	roadId = new int[initialStoreSize];
 	startNode = new int[initialStoreSize];
 	endNode = new int[initialStoreSize];
 	length = new double[initialStoreSize];
@@ -24,7 +24,7 @@ RoadStore::RoadStore(int initialStoreSize) {
 }
 
 RoadStore::~RoadStore() {
-	delete [] edgeId;
+	delete [] roadId;
 	delete [] startNode;
 	delete [] endNode;
 	delete [] length;
@@ -43,7 +43,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		int* newPositionInFile = new int[newSize];
 
 		for (int i = 0; i < size; ++i) {
-			newEdgeId[i] = this->edgeId[i];
+			newEdgeId[i] = this->roadId[i];
 			newStartNode[i] = this->startNode[i];
 			newEndNode[i] = this->endNode[i];
 			newLength[i] = this->length[i];
@@ -51,14 +51,14 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 			newPositionInFile[i] = this->positionInFile[i];
 		}
 
-		delete [] this->edgeId;
+		delete [] this->roadId;
 		delete [] this->startNode;
 		delete [] this->endNode;
 		delete [] this->length;
 		delete [] this->speedLimit;
 		delete [] this->positionInFile;
 
-		this->edgeId = newEdgeId;
+		this->roadId = newEdgeId;
 		this->startNode = newStartNode;
 		this->endNode = newEndNode;
 		this->length = newLength;
@@ -68,7 +68,7 @@ void RoadStore::addRoad(int edgeId, int startNode, int endNode, double length, d
 		storeSize = newSize;
 	}
 
-	this->edgeId[size] = edgeId;
+	this->roadId[size] = edgeId;
 	this->startNode[size] = startNode;
 	this->endNode[size] = endNode;
 	this->length[size] = length;
@@ -82,7 +82,7 @@ void RoadStore::reassignNodeIds(NodeStore* nodeStore) {
 	for (int i = 0; i < this->size; ++i) {
 
 #ifdef _DEBUG_
-		cout << "RoadStore: reassignNodeIds: Road(index:" << i << ",id" << this->edgeId[i] << ",sNode" << this->startNode[i] << ",eNode:" << this->endNode[i] << ") has new ids: ";
+		cout << "RoadStore: reassignNodeIds: Road(index:" << i << ",id" << this->roadId[i] << ",sNode" << this->startNode[i] << ",eNode:" << this->endNode[i] << ") has new ids: ";
 #endif
 
 		int startNodeIndex = nodeStore->getIndex(this->startNode[i]);
