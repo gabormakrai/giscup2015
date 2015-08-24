@@ -16,14 +16,14 @@ public:
 	int* startNode;
 	int* endNode;
 	double* length;
-	double* speedLimit;
+	double* time;
 	int* positionInFile;
 	int* lengthInFile;
 	int storeSize;
 	int size;
 	RoadStore(int initialStoreSize);
 	~RoadStore();
-	void addRoad(int edgeId, int startNode, int endNode, double length, double speedLimit, int positionInFile, int lengthInFile);
+	void addRoad(int edgeId, int startNode, int endNode, double length, double time, int positionInFile, int lengthInFile);
 	void reassignNodeIds(NodeStore* nodeStore);
 };
 

@@ -296,3 +296,22 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 
 }
 
+void GISVisualizer::writeSimplifiedRoads(const char* fileName, NodeStore* nodeStore, SimplifiedRoadStore* simplifiedRoadStore) {
+	std::fstream fs;
+	fs.open(fileName, std::fstream::out);
+
+	fs << "id;linestring" << std::endl;
+
+	int id = 0;
+
+	for (int i = 0; i < simplifiedRoadStore->size; ++i) {
+		double x1 = nodeStore->x[simplifiedRoadStore->startNode[i]];
+		double y1 = nodeStore->y[simplifiedRoadStore->startNode[i]];
+		double x2 = nodeStore->x[simplifiedRoadStore->endNode[i]];
+		double y2 = nodeStore->y[simplifiedRoadStore->endNode[i]];
+		fs << std::setprecision(16) << id++ << ";LINESTRING(" << x1 << " " << y1 << "," << x2 << " " << y2 << ")" << std::endl;
+	}
+
+	fs.close();
+
+}

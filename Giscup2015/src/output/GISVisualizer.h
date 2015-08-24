@@ -12,6 +12,7 @@
 
 #include "../data/NodeStore.h"
 #include "../data/RoadStore.h"
+#include "../data/SimplifiedRoadStore.h"
 #include "../data/PolygonStore.h"
 #include "../sp/AStarForwardBinaryHeap.h"
 #include "../sp/AStarBackwardBinaryHeap.h"
@@ -23,6 +24,7 @@ public:
 	void writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarForwardBinaryHeap* algo);
 	void writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBackwardBinaryHeap* algo);
 	void writeAStarBinaryHeap(const char* heapNodeFile, const char* closedNodeFile, const char* shortestPathFile, AStarBidirectionalBinaryHeap* algo);
+	void writeSimplifiedRoads(const char* fileName, NodeStore* nodeStore, SimplifiedRoadStore* simplifiedRoadStore);
 };
 
 

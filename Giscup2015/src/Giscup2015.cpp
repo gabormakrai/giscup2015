@@ -77,21 +77,24 @@ int main(int argc, char *argv[]) {
 	const char* outputStatFile;
 
 	if (argc == 1) { // TEST MODE
-//		inputNodeFile = "/home/makrai/giscup2015/data/sfo_nodes.txt";
-//		inputRoadFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
-//		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
-//		sourceNode = "50096828";
-//		destinationNode = "48432214";
-//		inputNodeFile = "/home/makrai/giscup2015/data/example_nodes.txlt";
+		inputNodeFile = "/home/makrai/giscup2015/data/sfo_nodes.txt";
+		inputRoadFile = "/home/makrai/giscup2015/data/sfo_roads.txt";
+		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
+		sourceNode = "50096828";
+		destinationNode = "48432214";
+
+//		inputNodeFile = "/home/makrai/giscup2015/data/example_nodes.txt";
 //		inputRoadFile = "/home/makrai/giscup2015/data/example_roads.txt";
 //		inputPolygonFile = "/home/makrai/giscup2015/data/example_roads.txt";
 //		sourceNode = "1";
 //		destinationNode = "10";
-		inputNodeFile = "/home/makrai/giscup2015/data/example2_nodes.txt";
-		inputRoadFile = "/home/makrai/giscup2015/data/example2_roads.txt";
-		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
-		sourceNode = "6";
-		destinationNode = "20";
+
+//		inputNodeFile = "/home/makrai/giscup2015/data/example2_nodes.txt";
+//		inputRoadFile = "/home/makrai/giscup2015/data/example2_roads.txt";
+//		inputPolygonFile = "/home/makrai/giscup2015/data/sfo_poly.txt";
+//		sourceNode = "6";
+//		destinationNode = "20";
+
 		outputShortestDistancePathFile = "/media/sf_ubuntu_shared_folder/output_SP_distance.txt";
 		outputShortestTimePathFile = "/media/sf_ubuntu_shared_folder/output_SP_time.txt";
 		outputStatFile = "/media/sf_ubuntu_shared_folder/output_Stat.txt";
@@ -178,12 +181,24 @@ int main(int argc, char *argv[]) {
 	// use new ids in roadStore
 	roadStore->reassignNodeIds(nodeStore);
 
+	int sourceNodeIndex = nodeStore->getIndex(sourceNodeId);
+	int destinationNodeIndex = nodeStore->getIndex(destinationNodeId);
+
 #ifdef _GISVISUALIZER_
 	GISVisualizer gisVisualizer;
 	gisVisualizer.writeGISFiles("/media/sf_ubuntu_shared_folder/nodes.csv", "/media/sf_ubuntu_shared_folder/roads.csv", "/media/sf_ubuntu_shared_folder/bannedNodes.csv", "/media/sf_ubuntu_shared_folder/polygons.csv", nodeStore, roadStore, polygonStore, array1);
 #endif
 
-	SimplifiedRoadStore* simplifiedRoadStore = new SimplifiedRoadStore(nodeStore, roadStore, ROADSIMPLIFICATION_NORMAL);
+	SimplifiedRoadStore* simplifiedRoadStore = new SimplifiedRoadStore(nodeStore, roadStore, sourceNodeIndex, destinationNodeIndex, ROADSIMPLIFICATION_SIMPLIFIED);
+
+#ifdef _GISVISUALIZER_
+	gisVisualizer.writeSimplifiedRoads("/media/sf_ubuntu_shared_folder/simplifiedRoads.csv", nodeStore, simplifiedRoadStore);
+#endif
+
+#ifdef _DEBUG_
+	// print out general statistics
+	cout << "#sroad: " << simplifiedRoadStore->size << endl;
+#endif
 
 	// create neighbourdatabase
 #if defined(ALGO1) || defined(ALGO3)

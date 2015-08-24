@@ -53,7 +53,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* 
 			++this->count[from];
 			this->id[id] = to;
 			this->distanceWeight[id] = simplifiedRoadStore->length[i];
-			this->timeWeight[id] = simplifiedRoadStore->length[i] / simplifiedRoadStore->speedLimit[i];
+			this->timeWeight[id] = simplifiedRoadStore->time[i];
 			this->roadId[id] = i;
 		}
 
@@ -89,7 +89,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* 
 			++this->count[to];
 			this->id[id] = from;
 			this->distanceWeight[id] = simplifiedRoadStore->length[i];
-			this->timeWeight[id] = simplifiedRoadStore->length[i] / simplifiedRoadStore->speedLimit[i];
+			this->timeWeight[id] = simplifiedRoadStore->time[i];
 			this->roadId[id] = i;
 		}
 

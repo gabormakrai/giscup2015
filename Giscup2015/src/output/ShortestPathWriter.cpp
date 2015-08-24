@@ -30,7 +30,7 @@ void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const cha
 		int road = sp->next();
 
 		sp->length += simplifiedRoadStore->length[road];
-		sp->time += simplifiedRoadStore->length[road] / simplifiedRoadStore->speedLimit[road];
+		sp->time += simplifiedRoadStore->time[road];
 
 		for (int i = 0; i < simplifiedRoadStore->seekCount[road]; ++i) {
 			int index = simplifiedRoadStore->seekOffset[road] + i;

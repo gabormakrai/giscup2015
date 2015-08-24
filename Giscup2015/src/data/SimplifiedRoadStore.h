@@ -14,14 +14,14 @@
 #define ROADSIMPLIFICATION_NORMAL 0
 #define ROADSIMPLIFICATION_SIMPLIFIED 1
 
-//#define _DEBUG_
+//#define _SDEBUG_
 
 class SimplifiedRoadStore {
 public:
 	int* startNode;
 	int* endNode;
 	double* length;
-	double* speedLimit;
+	double* time;
 	int storeSize;
 	int size;
 
@@ -30,7 +30,7 @@ public:
 	int* seek;
 	int* seekLength;
 
-	SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int mode);
+	SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadStore, int source, int destination, int mode);
 	~SimplifiedRoadStore();
 };
 

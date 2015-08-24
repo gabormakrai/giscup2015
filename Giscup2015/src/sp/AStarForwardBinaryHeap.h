@@ -10,7 +10,7 @@
 
 //#define _DEBUG_
 //#define _HEAPANALYSIS_
-//#define _HEAPSTATISTICS_
+#define _HEAPSTATISTICS_
 
 #include "AStarForwardShortestPath.h"
 #include "ShortestPathAlgorithm.h"
