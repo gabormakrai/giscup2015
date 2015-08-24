@@ -143,6 +143,9 @@ void RoadParser::loadRoadFile(const char* fileName, unsigned char* buffer, int b
 				int endNodeId = atoi(endNodeIdChar);
 				double length = atof(lengthChar);
 				double speedLimit = atof(speedLimitChar);
+				if (currentStart != 0) {
+					++currentStart;
+				}
 				roadStore->addRoad(id, startNodeId, endNodeId, length, speedLimit, currentStart);
 				currentStart = positionInFile;
 #ifdef _DEBUG_
