@@ -2,8 +2,8 @@
 // Name        : Giscup2015.cpp
 // Author      : Gabor Makrai
 // Version     :
-// Copyright   : x
-// Description : Hello World in C++, Ansi-style
+// Copyright   :
+// Description :GISCUP2015 main file
 //============================================================================
 
 #include "data/RoadParser.h"
@@ -30,33 +30,44 @@
 #include <iostream>
 using namespace std;
 
+// three different A* algorithm implementation: forward, backward and bi-directional
 #define ALGO1
 //#define ALGO2
 //#define ALGO3
 
-#define _DEBUG_
+//#define _DEBUG_
 //#define _GISVISUALIZER_
-#define _CONSOLE_
+//#define _CONSOLE_
 
 #define BUFFER_SIZE 16384
 
+// function for showing the elapsed time
 void showElapsedTime(struct timeval start, struct timeval end) {
 #ifdef _CONSOLE_
 	cout << (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec) << endl;
 #endif
 }
 
+// calculate elapsed time
 double calculateElapsedTime(struct timeval start, struct timeval end) {
 	return (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec);
 }
 
+// check that input file exists
 inline bool fileExists(const char* file) {
     struct stat buf;
     return (stat(file, &buf) == 0);
 }
 
+// main function
 int main(int argc, char *argv[]) {
 
+	// timestamps
+	// 1. data read
+	// 2. data preprocess
+	// 3. shortest path search by distance
+	// 4. shortest path search by time
+	// 5. data write
 	struct timeval startDataRead;
 	struct timeval endDataRead;
 	struct timeval startPre;
@@ -70,6 +81,7 @@ int main(int argc, char *argv[]) {
 
 	gettimeofday(&startDataRead, NULL);
 
+	// parameters
 	const char* inputRoadFile;
 	const char* inputNodeFile;
 	const char* inputPolygonFile;
@@ -112,8 +124,6 @@ int main(int argc, char *argv[]) {
 		outputStatFile = argv[8];
 	} else {
 		cout << "Not enough parameter..." << endl;
-		// TODO: here...
-		cout << "usage: " << endl;
 		return 0;
 	}
 
@@ -156,7 +166,6 @@ int main(int argc, char *argv[]) {
 	PolygonParser.parse(inputPolygonFile, buffer, BUFFER_SIZE, polygonStore);
 
 	// allocating the necessary memory
-
 	int* sp1 = new int[roadStore->storeSize];
 	int* sp2 = new int[roadStore->storeSize];
 	int* bannedNodes = sp1;
@@ -188,6 +197,7 @@ int main(int argc, char *argv[]) {
 	cout << "#polygon: " << polygonStore->size << endl;
 #endif
 
+	// polygon obstacles avoidance by banning nodes out
 	polygonStore->doCalculation(bannedNodes, nodeStore, POLYGON_SEQUENTIAL);
 
 #ifdef _DEBUG_
@@ -281,10 +291,7 @@ int main(int argc, char *argv[]) {
 	gettimeofday(&endSearch2, NULL);
 	gettimeofday(&startDataWrite, NULL);
 
-//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo1_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo1_shortestPath.csv", algo1);
-//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo2_shortestPath.csv", algo2);
-//	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heapNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_closedNodes.csv", "/media/sf_ubuntu_shared_folder/algo3_shortestPath.csv", algo3);
-
+	// shortest path writer
 	ShortestPathWriter shortestPathWriter;
 	shortestPathWriter.write(spDistance, outputShortestDistancePathFile, inputRoadFile, simplifiedRoadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
 	shortestPathWriter.write(spTime, outputShortestTimePathFile, inputRoadFile, simplifiedRoadStore, nodeStore, buffer, buffer2, BUFFER_SIZE);
@@ -294,6 +301,7 @@ int main(int argc, char *argv[]) {
 	cout << "ShortestPathTime: length: " << spTime->length << ", time: " << spTime->time << endl;
 #endif
 
+	// stat file writer
 	StatFileWriter statFileWriter;
 	double preTime = calculateElapsedTime(startPre, endPre);
 	double searchDistance = calculateElapsedTime(startSearch1, endSearch1);
@@ -312,6 +320,7 @@ int main(int argc, char *argv[]) {
 	delete algo3;
 #endif
 
+	// delete simplifiedRoadSTORe
 	delete simplifiedRoadStore;
 
 	// dispose storages
@@ -328,6 +337,7 @@ int main(int argc, char *argv[]) {
 	delete backwardNeighbour;
 #endif
 
+	// delete arrays
 	delete spDistance;
 	delete spTime;
 
