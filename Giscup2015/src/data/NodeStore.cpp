@@ -2,7 +2,7 @@
  * NodeStore.cpp
  *
  *  Created on: 11 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #include "NodeStore.h"
@@ -13,10 +13,12 @@
 using namespace std;
 #endif
 
+// function to calculate distance between two coordinates
 double distanceByDistance(double dx, double dy) {
 	return sqrt(dx * dx + dy * dy);
 }
 
+// function to calculate time distance between two coordinates (assuming the average speed of 11.1m/s, 40km/h)
 double distanceByTime(double dx, double dy) {
 	return sqrt(dx * dx + dy * dy) / 11.1;
 }

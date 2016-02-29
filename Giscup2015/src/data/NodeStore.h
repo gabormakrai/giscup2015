@@ -2,7 +2,7 @@
  * NodeStore.h
  *
  *  Created on: 11 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #ifndef NODESTORE_H_
@@ -12,6 +12,11 @@
 
 #include <stdlib.h>
 
+/**
+ *
+ * Nodestore class for storing, sorting nodes and for calculating distance between them
+ *
+ */
 class NodeStore {
 public:
 	double* x;
@@ -24,9 +29,6 @@ public:
 	void addNode(int id, double x, double y);
 	void sort();
 	int getIndex(int id);
-	// distance calculations
-//	double distanceByDistance(int i1, int i2);
-//	double distanceByTime(int i1, int i2);
 	double (*distanceFunction)(double, double);
 	double distance(int i1, int i2);
 	void setDistanceFunction(int mode);
