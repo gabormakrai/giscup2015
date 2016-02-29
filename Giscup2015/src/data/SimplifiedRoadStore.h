@@ -2,7 +2,8 @@
  * SimplifiedRoadStore.h
  *
  *  Created on: 23 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
+ *
  */
 
 #ifndef SIMPLIFIEDROADSTORE_H_
@@ -16,6 +17,13 @@
 
 //#define _SDEBUG_
 
+/**
+ *
+ * SimplifiedRoadStore class contains the simplification algorithm in its constructor
+ * It converts the Roadstore into a graph (in neighbourhood list form) which then can be used later
+ * by the NeighbourDataBase class
+ *
+ */
 class SimplifiedRoadStore {
 public:
 	int* startNode;

@@ -2,7 +2,7 @@
  * SimlifiedRoadStore.cpp
  *
  *  Created on: 24 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #include "SimplifiedRoadStore.h"
@@ -41,13 +41,6 @@ SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadSt
 			seekCount[size] = 1;
 			seek[size] = roadStore->positionInFile[i];
 			seekLength[size] = roadStore->lengthInFile[i];
-
-//			seekOffset[size] = 2 * size;
-//			seekCount[size] = 2;
-//			seek[2 * size] = roadStore->positionInFile[i];
-//			seekLength[2 * size] = roadStore->lengthInFile[i];
-//			seek[2 * size + 1] = roadStore->positionInFile[i];
-//			seekLength[2 * size + 1] = roadStore->lengthInFile[i];
 
 			++size;
 		}
@@ -251,8 +244,6 @@ SimplifiedRoadStore::SimplifiedRoadStore(NodeStore* nodeStore, RoadStore* roadSt
 #endif
 
 	}
-
-
 
 }
 
