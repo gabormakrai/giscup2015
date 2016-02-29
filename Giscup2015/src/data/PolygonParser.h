@@ -2,7 +2,7 @@
  * PolygonParser.h
  *
  *  Created on: 22 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #ifndef POLYGONPARSER_H_
@@ -12,6 +12,11 @@
 
 #include "PolygonStore.h"
 
+/**
+ *
+ * A parser class for reading the polygon data from file
+ *
+ */
 class PolygonParser {
 public:
 	void parse(const char* fileName, unsigned char* buffer, int bufferSize, PolygonStore* store);
