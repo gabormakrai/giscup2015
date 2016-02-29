@@ -2,7 +2,7 @@
  * NeighbourDataBase.cpp
  *
  *  Created on: 17 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #include "NeighbourDataBase.h"
@@ -13,6 +13,7 @@ using namespace std;
 #endif
 
 NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* simplifiedRoadStore, int mode, int* bannedNodes) {
+	// create the necessary arrays
 	this->count = new int[nodeStore->storeSize];
 	this->offset = new int[nodeStore->storeSize];
 	this->id = new int[simplifiedRoadStore->storeSize];
@@ -26,6 +27,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* 
 		this->offset[i] = 0;
 	}
 
+	// forward neighbour list calculation
 	if (mode == NEIGHBOURDATABASE_FORWARD) {
 
 		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
@@ -69,7 +71,7 @@ NeighbourDataBase::NeighbourDataBase(NodeStore* nodeStore, SimplifiedRoadStore* 
 			}
 		}
 #endif
-	} else {
+	} else { // backward neighbour list calculation
 		for (int i = 0; i < simplifiedRoadStore->size; ++i) {
 			++this->count[simplifiedRoadStore->endNode[i]];
 		}
@@ -117,7 +119,9 @@ NeighbourDataBase::~NeighbourDataBase() {
 	delete [] timeWeight;
 	delete [] roadId;
 }
-
+/**
+ * changes the target weights
+ */
 void NeighbourDataBase::setWeight(int mode) {
 	if (mode == 0) { // weight = distance
 		weight = distanceWeight;
