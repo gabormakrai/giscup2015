@@ -2,12 +2,19 @@
  * BinaryHeap.h
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
+ *
  */
 
 #ifndef BINARYHEAP_H_
 #define BINARYHEAP_H_
 
+/**
+ * Class contains a generic binary heap.
+ *
+ * It is a classic 2-ary binary heap contains a lookup table for finding nodes already in the heap.
+ *
+ */
 template <class T>
 class BinaryHeap {
 public:
