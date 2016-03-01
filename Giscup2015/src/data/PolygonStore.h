@@ -2,7 +2,7 @@
  * PolygonStore.h
  *
  *  Created on: 22 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #ifndef POLYGONSTORE_H_
@@ -14,6 +14,15 @@
 #define POLYGON_SORT 1
 
 #include "NodeStore.h"
+
+/**
+ *
+ * Simple storage class for storing polygons.
+ * As the competition focuses only on convex polygons, after parsing each polygon, a simple polygon triangulation process is executed to store only
+ * triangles.
+ * Also the class can find the nodes/verticies which are covered by the polygons(/triangles) so it can create a ban list.
+ *
+ */
 
 class PolygonStore {
 public:
