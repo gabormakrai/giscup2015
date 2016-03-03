@@ -14,9 +14,9 @@
 #include "../data/RoadStore.h"
 #include "../data/SimplifiedRoadStore.h"
 #include "../data/PolygonStore.h"
-#include "../sp/AStarForwardBinaryHeap.h"
-#include "../sp/AStarBackwardBinaryHeap.h"
-#include "../sp/AStarBidirectionalBinaryHeap.h"
+#include "../sp/astarforward/AStarForwardBinaryHeap.h"
+#include "../sp/astarbackward/AStarBackwardBinaryHeap.h"
+#include "../sp/astarbidirectional/AStarBidirectionalBinaryHeap.h"
 
 class GISVisualizer {
 public:
