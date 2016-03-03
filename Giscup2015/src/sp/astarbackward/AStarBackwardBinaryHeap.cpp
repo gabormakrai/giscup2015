@@ -31,6 +31,7 @@ AStarBackwardBinaryHeap::AStarBackwardBinaryHeap(NeighbourDataBase* neighbourDat
 
 	this->closed = new int[nodeStore->storeSize];
 	this->next = new int[nodeStore->storeSize];
+	this->nextRoad = new int[nodeStore->storeSize];
 	this->gScore = new double[nodeStore->storeSize];
 	this->heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), heapLookupTable, heapNodeArray, heapValueArray);
 }
@@ -38,13 +39,17 @@ AStarBackwardBinaryHeap::AStarBackwardBinaryHeap(NeighbourDataBase* neighbourDat
 AStarBackwardBinaryHeap::~AStarBackwardBinaryHeap() {
 	delete [] closed;
 	delete [] next;
+	delete [] nextRoad;
 	delete [] gScore;
 	delete heap;
 }
 
-void AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
+void AStarBackwardBinaryHeap::shortestPath(int fromId, int toId, int mode) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
+
+	this->nodeStore->setDistanceFunction(mode);
+	this->neighbourDataBase->setWeight(mode);
 
 	this->from = from;
 	this->to = to;
@@ -114,15 +119,20 @@ void AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
 		for (int i = 0; i < this->neighbourDataBase->count[current]; ++i) {
 			int neighbourIndex = this->neighbourDataBase->offset[current] + i;
 			int neighbour = this->neighbourDataBase->id[neighbourIndex];
+			int roadId = this->neighbourDataBase->roadId[neighbourIndex];
 
 			if (closed[neighbour] == 1) {
 				continue;
 			}
 
 			double gCandidate = gScore[current] + this->neighbourDataBase->weight[neighbourIndex];
+#ifdef _DEBUG_
+			cout << "gCandidate: " << gCandidate << endl;
+#endif
 
 			if (heap->lookupTable[neighbour] == -1 || gCandidate < gScore[neighbour]) {
 				next[neighbour] = current;
+				nextRoad[neighbour] = roadId;
 				gScore[neighbour] = gCandidate;
 				heap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, from));
 			}
@@ -153,4 +163,22 @@ void AStarBackwardBinaryHeap::shortestPath(int fromId, int toId) {
 	cout << "steps:" << steps << ", maxHeapSize: " << maxHeapSize << ", avgHeapSize: " << (double)avgHeapSize / (double)steps << endl;
 #endif
 
+}
+
+void AStarBackwardBinaryHeap::reconstructPath(AStarBackwardShortestPath* path) {
+
+	int currentNode = from;
+
+	while (true) {
+
+		path->addRoad(nextRoad[currentNode]);
+
+		currentNode = next[currentNode];
+
+		if (currentNode == to) {
+			break;
+		}
+	}
+
+	path->lastRoadAdded();
 }
