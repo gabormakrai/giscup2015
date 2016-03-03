@@ -13,9 +13,9 @@
 //#define _HEAPSTATISTICS_
 
 #include "AStarForwardShortestPath.h"
-#include "ShortestPathAlgorithm.h"
-#include "../datastructure/BinaryHeap.h"
-#include "../data/NeighbourDataBase.h"
+#include "../ShortestPathAlgorithm.h"
+#include "../../datastructure/BinaryHeap.h"
+#include "../../data/NeighbourDataBase.h"
 
 class AStarForwardBinaryHeap : public ShortestPathAlgorithm {
 public:

@@ -8,7 +8,7 @@
 #ifndef ASTARFORWARDSHORTESTPATH_H_
 #define ASTARFORWARDSHORTESTPATH_H_
 
-#include "ShortestPath.h"
+#include "../ShortestPath.h"
 
 class AStarForwardShortestPath : public ShortestPath {
 public:
