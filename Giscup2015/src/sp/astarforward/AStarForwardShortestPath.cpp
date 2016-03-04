@@ -15,10 +15,6 @@ AStarForwardShortestPath::AStarForwardShortestPath(int* storage) {
 	this->time = 0.0;
 }
 
-void AStarForwardShortestPath::init() {
-	--current;
-}
-
 bool AStarForwardShortestPath::hasNext() {
 	return current != -1;
 }

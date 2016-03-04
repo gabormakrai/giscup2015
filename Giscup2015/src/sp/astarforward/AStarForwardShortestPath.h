@@ -15,7 +15,6 @@ public:
 	int* storage;
 	int current;
 	AStarForwardShortestPath(int* storage);
-	void init();
 	bool hasNext();
 	int next();
 	void addRoad(int id);
