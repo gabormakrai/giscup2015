@@ -16,7 +16,6 @@ public:
 	int current;
 	int roads;
 	AStarBackwardShortestPath(int* storage);
-	void init();
 	bool hasNext();
 	int next();
 	void addRoad(int id);

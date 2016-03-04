@@ -21,9 +21,6 @@ void AStarBackwardShortestPath::lastRoadAdded() {
 	this->current = 0;
 }
 
-void AStarBackwardShortestPath::init() {
-}
-
 bool AStarBackwardShortestPath::hasNext() {
 	return current < roads;
 }
