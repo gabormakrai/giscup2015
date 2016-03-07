@@ -25,7 +25,7 @@ void ShortestPathWriter::write(ShortestPath* sp, const char* fileName, const cha
 	cout << "writing out shortest path..." << endl;
 #endif
 
-	for (sp->init(); sp->hasNext();) {
+	for (; sp->hasNext();) {
 
 		int road = sp->next();
 
