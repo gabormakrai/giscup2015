@@ -24,7 +24,7 @@ using namespace std;
 
 #include <limits>
 
-AStarBidirectionalBinaryHeap::AStarBidirectionalBinaryHeap(NeighbourDataBase* forwardNeighbour, NeighbourDataBase* backwardNeighbour, NodeStore* nodeStore, RoadStore* roadStore) {
+AStarBidirectionalBinaryHeap::AStarBidirectionalBinaryHeap(NeighbourDataBase* forwardNeighbour, NeighbourDataBase* backwardNeighbour, NodeStore* nodeStore, RoadStore* roadStore, int* heapLookupTable1, int* heapNodeArray1, double* heapValueArray1, int* heapLookupTable2, int* heapNodeArray2, double* heapValueArray2) {
 	this->nodeStore = nodeStore;
 	this->forwardNeighbour = forwardNeighbour;
 	this->backwardNeighbour = backwardNeighbour;
@@ -32,24 +32,32 @@ AStarBidirectionalBinaryHeap::AStarBidirectionalBinaryHeap(NeighbourDataBase* fo
 	this->forwardGScore = new double[nodeStore->storeSize];
 	this->backwardGScore = new double[nodeStore->storeSize];
 	this->next = new int[nodeStore->storeSize];
+	this->nextRoad = new int[nodeStore->storeSize];
 	this->previous = new int[nodeStore->storeSize];
-	this->forwardHeap = 0; //new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
-	this->backwardHeap = 0; //new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max());
+	this->previousRoad = new int[nodeStore->storeSize];
+	this->forwardHeap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), heapLookupTable1, heapNodeArray1, heapValueArray1);
+	this->backwardHeap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), heapLookupTable2, heapNodeArray2, heapValueArray2);
 }
 
 AStarBidirectionalBinaryHeap::~AStarBidirectionalBinaryHeap() {
 	delete [] closed;
 	delete [] next;
+	delete [] nextRoad;
 	delete [] previous;
+	delete [] previousRoad;
 	delete [] forwardGScore;
 	delete [] backwardGScore;
 	delete forwardHeap;
 	delete backwardHeap;
 }
 
-void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
+void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId, int mode) {
 	int from = this->nodeStore->getIndex(fromId);
 	int to = this->nodeStore->getIndex(toId);
+
+	this->nodeStore->setDistanceFunction(mode);
+	this->forwardNeighbour->setWeight(mode);
+	this->backwardNeighbour->setWeight(mode);
 
 	this->from = from;
 	this->to = to;
@@ -122,6 +130,7 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 		for (int i = 0; i < this->forwardNeighbour->count[forwardCurrent]; ++i) {
 			int neighbourIndex = this->forwardNeighbour->offset[forwardCurrent] + i;
 			int neighbour = this->forwardNeighbour->id[neighbourIndex];
+			int roadId = this->forwardNeighbour->roadId[neighbourIndex];
 
 			if (closed[neighbour] == 1) {
 				continue;
@@ -131,6 +140,7 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 
 			if (forwardHeap->lookupTable[neighbour] == -1 || gCandidate < forwardGScore[neighbour]) {
 				previous[neighbour] = forwardCurrent;
+				previousRoad[neighbour] = roadId;
 				forwardGScore[neighbour] = gCandidate;
 				forwardHeap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, to));
 			}
@@ -166,6 +176,7 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 		for (int i = 0; i < this->backwardNeighbour->count[backwardCurrent]; ++i) {
 			int neighbourIndex = this->backwardNeighbour->offset[backwardCurrent] + i;
 			int neighbour = this->backwardNeighbour->id[neighbourIndex];
+			int roadId = this->backwardNeighbour->roadId[neighbourIndex];
 
 			if (closed[neighbour] == 1) {
 				continue;
@@ -175,6 +186,7 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 
 			if (backwardHeap->lookupTable[neighbour] == -1 || gCandidate < backwardGScore[neighbour]) {
 				next[neighbour] = backwardCurrent;
+				nextRoad[neighbour] = roadId;
 				backwardGScore[neighbour] = gCandidate;
 				backwardHeap->decreaseKey(neighbour, gCandidate + nodeStore->distance(neighbour, from));
 			}
@@ -193,3 +205,56 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId) {
 #endif
 
 }
+
+void AStarBidirectionalBinaryHeap::reconstructPath(AStarBidirectionalShortestPath* path) {
+	// forward: from -> forwardBackwardNode
+
+	int currentNode = meetingNode;
+
+	while (true) {
+
+		path->addForwardRoad(previousRoad[currentNode]);
+		currentNode = previous[currentNode];
+
+		if (currentNode == from) {
+			break;
+		}
+	}
+
+	// backward forwardBackwardNode -> to
+
+	currentNode = meetingNode;
+
+	while (true) {
+
+		path->addBackwardRoad(nextRoad[currentNode]);
+
+		currentNode = next[currentNode];
+
+		if (currentNode == to) {
+			break;
+		}
+	}
+
+	path->lastRoadAdded();
+}
+
+/*
+void AStarBackwardBinaryHeap::reconstructPath(AStarBackwardShortestPath* path) {
+
+	int currentNode = from;
+
+	while (true) {
+
+		path->addRoad(nextRoad[currentNode]);
+
+		currentNode = next[currentNode];
+
+		if (currentNode == to) {
+			break;
+		}
+	}
+
+	path->lastRoadAdded();
+}
+*/
