@@ -97,9 +97,8 @@ void GISVisualizer::writeAStarBinaryHeap(const char* heapNodeFile, const char* c
 	fs.open(heapNodeFile, std::fstream::out);
 	fs << "id,x,y" << std::endl;
 
-	BinaryHeap<double>* heap = algo->heap;
-	for (int i = 0; i < heap->size; ++i) {
-		int node = heap->nodeArray[i];
+	for (int i = 0; i < algo->heap->size; ++i) {
+		int node = algo->heap->nodeArray[i];
 
 		fs << std::setprecision(16) << node << "," << nodeStore->x[node] << "," << nodeStore->y[node] << std::endl;
 
