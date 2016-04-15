@@ -2,7 +2,7 @@
  * AStarForwardShortestPath.cpp
  *
  *  Created on: 22 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 
