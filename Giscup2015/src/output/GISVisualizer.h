@@ -2,7 +2,7 @@
  * GISVisualizer.h
  *
  *  Created on: 20 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #ifndef GISVISUALIZER_H_
@@ -18,6 +18,11 @@
 #include "../sp/astarbackward/AStarBackwardBinaryHeap.h"
 #include "../sp/astarbidirectional/AStarBidirectionalBinaryHeap.h"
 
+/**
+ *
+ * Class for visualising shortest paths, and heaps
+ *
+ */
 class GISVisualizer {
 public:
 	void writeGISFiles(const char* nodeFile, const char* roadFile, const char* polygonNodeFile, const char* polygonFile, NodeStore* nodeStore, RoadStore* roadStore, PolygonStore* polygonStore, int* bannedNodes);

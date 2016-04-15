@@ -2,7 +2,7 @@
  * GISVisualizer.cpp
  *
  *  Created on: 20 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #include "GISVisualizer.h"
@@ -64,7 +64,6 @@ void GISVisualizer::writeGISFiles(const char* nodeFile, const char* roadFile, co
 		double cx = polygonStore->cx[i];
 		double cy = polygonStore->cy[i];
 
-//		fs << std::setprecision(16) << (polygonId++) << ";POLYGON ((" << ax << " " << ay << ", " << bx << " " << by << ", " << cx << " " << cy << "))" << std::endl;
 		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << ax << " " << ay << "," << bx << " " << by << ")" << std::endl;
 		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << bx << " " << by << "," << cx << " " << cy << ")" << std::endl;
 		fs << std::setprecision(16) << (polygonId++) << ";LINESTRING(" << cx << " " << cy << "," << ax << " " << ay << ")" << std::endl;
@@ -312,5 +311,4 @@ void GISVisualizer::writeSimplifiedRoads(const char* fileName, NodeStore* nodeSt
 	}
 
 	fs.close();
-
 }
