@@ -2,7 +2,7 @@
  * AStarBinaryHeap.cpp
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #include "AStarBackwardBinaryHeap.h"
