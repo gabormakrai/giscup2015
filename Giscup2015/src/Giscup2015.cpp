@@ -3,7 +3,7 @@
 // Author      : Gabor Makrai
 // Version     :
 // Copyright   :
-// Description :GISCUP2015 main file
+// Description : GISCUP2015 main file
 //============================================================================
 
 #include "data/RoadParser.h"
@@ -15,9 +15,14 @@
 #include "data/SimplifiedRoadStore.h"
 
 #include "sp/ShortestPathAlgorithm.h"
-#include "sp/AStarForwardBinaryHeap.h"
-#include "sp/AStarBackwardBinaryHeap.h"
-#include "sp/AStarBidirectionalBinaryHeap.h"
+#include "sp/astarforward/AStarForwardBinaryHeap.h"
+#include "sp/astarbackward/AStarBackwardBinaryHeap.h"
+#include "sp/astarbidirectional/AStarBidirectionalBinaryHeap.h"
+
+#include <limits>
+#include "datastructure/Heap.h"
+#include "datastructure/BinaryHeap.h"
+#include "datastructure/BinaryHeap4ary.h"
 
 #include "output/ShortestPathWriter.h"
 #include "output/GISVisualizer.h"
@@ -30,11 +35,16 @@
 #include <iostream>
 using namespace std;
 
-// three different A* algorithm implementation: forward, backward and bi-directional
+// three different A* algorithm implementation: forward, backward and bi-directional, v2 bi-directional
 #define ALGO1
 //#define ALGO2
 //#define ALGO3
 
+// two binary heap implementations (2-ary/standard, 4-ary)
+#define BINARYHEAP
+//#define BINARYHEAP4ARY
+
+// controls the output for the application
 //#define _DEBUG_
 //#define _GISVISUALIZER_
 //#define _CONSOLE_
@@ -168,6 +178,12 @@ int main(int argc, char *argv[]) {
 	// allocating the necessary memory
 	int* sp1 = new int[roadStore->storeSize];
 	int* sp2 = new int[roadStore->storeSize];
+
+#ifdef ALGO3
+	int* sp3 = new int[roadStore->storeSize];
+	int* sp4 = new int[roadStore->storeSize];
+#endif
+
 	int* bannedNodes = sp1;
 
 	int* simplyStartNode = new int[roadStore->storeSize];
@@ -179,6 +195,7 @@ int main(int argc, char *argv[]) {
 	int* simplySeek = new int[roadStore->storeSize];
 	int* simplySeekLength = new int[roadStore->storeSize];
 
+	// temporary arrays for simplification and other operations
 	int* array1 = new int[nodeStore->storeSize];
 	int* array2 = new int[nodeStore->storeSize];
 	int* array3 = new int[nodeStore->storeSize];
@@ -186,6 +203,18 @@ int main(int argc, char *argv[]) {
 	int* array5 = new int[roadStore->storeSize];
 	int* array6 = new int[nodeStore->storeSize];
 	double* array7 = new double[nodeStore->storeSize];
+#ifdef ALGO3
+	int* array1a = new int[nodeStore->storeSize];
+	int* array2a = new int[nodeStore->storeSize];
+	double* array7a = new double[nodeStore->storeSize];
+#endif
+
+#ifdef BINARYHEAP
+	BinaryHeap<double>* heap = new BinaryHeap<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), array1, array2, array7);
+#endif
+#ifdef BINARYHEAP4ARY
+	BinaryHeap4ary<double>* heap = new BinaryHeap4ary<double>(nodeStore->storeSize, 0.0, std::numeric_limits<double>::max(), array1, array2, array7);
+#endif
 
 	gettimeofday(&endDataRead, NULL);
 	gettimeofday(&startPre, NULL);
@@ -211,6 +240,16 @@ int main(int argc, char *argv[]) {
 #ifdef ALGO1
 	AStarForwardShortestPath* spDistance = new AStarForwardShortestPath(sp1);
 	AStarForwardShortestPath* spTime = new AStarForwardShortestPath(sp2);
+#endif
+
+#ifdef ALGO2
+	AStarBackwardShortestPath* spDistance = new AStarBackwardShortestPath(sp1);
+	AStarBackwardShortestPath* spTime = new AStarBackwardShortestPath(sp2);
+#endif
+
+#ifdef ALGO3
+	AStarBidirectionalShortestPath* spDistance = new AStarBidirectionalShortestPath(sp1, sp2);
+	AStarBidirectionalShortestPath* spTime = new AStarBidirectionalShortestPath(sp3, sp4);
 #endif
 
 	int sourceNodeId = atoi(sourceNode);
@@ -248,14 +287,14 @@ int main(int argc, char *argv[]) {
 	NeighbourDataBase* forwardNeighbour = new NeighbourDataBase(nodeStore, simplifiedRoadStore, NEIGHBOURDATABASE_FORWARD, sp1);
 #endif
 #if defined(ALGO2) || defined(ALGO3)
-	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, roadStore, NEIGHBOURDATABASE_BACKWARD);
+	NeighbourDataBase* backwardNeighbour = new NeighbourDataBase(nodeStore, simplifiedRoadStore, NEIGHBOURDATABASE_BACKWARD, sp1);
 #endif
 
 	gettimeofday(&endPre, NULL);
 	gettimeofday(&startSearch1, NULL);
 
 #ifdef ALGO1
-	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore, array1, array2, array7);
+	AStarForwardBinaryHeap* algo1 = new AStarForwardBinaryHeap(forwardNeighbour, nodeStore, roadStore, heap);
 	algo1->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
 	// cout << algo1->result << endl;
 	algo1->reconstructPath(spDistance);
@@ -275,17 +314,43 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef ALGO2
-	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore);
-	//cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
-	algo2->shortestPath(sourceNodeId, destinationNodeId);
-	//cout << "sp(50096828,48432214):" << algo2->result << endl;
+	AStarBackwardBinaryHeap* algo2 = new AStarBackwardBinaryHeap(backwardNeighbour, nodeStore, roadStore, array1, array2, array7);
+	algo2->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
+	// cout << algo2->result << endl;
+	algo2->reconstructPath(spDistance);
+	gettimeofday(&endSearch1, NULL);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO2)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heap_distance.csv", "/media/sf_ubuntu_shared_folder/algo2_closed_distance.csv", "/media/sf_ubuntu_shared_folder/algo2_sp_distance.csv", algo2);
+#endif
+#ifdef ALGO2
+	gettimeofday(&startSearch2, NULL);
+	algo2->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_TIME);
+	// cout << algo1->result << endl;
+	algo2->reconstructPath(spTime);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO2)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo2_heap_time.csv", "/media/sf_ubuntu_shared_folder/algo2_closed_time.csv", "/media/sf_ubuntu_shared_folder/algo2_sp_time.csv", algo2);
 #endif
 
 #ifdef ALGO3
-	AStarBidirectionalBinaryHeap* algo3 = new AStarBidirectionalBinaryHeap(forwardNeighbour, backwardNeighbour, nodeStore, roadStore);
-	// cout << "sp(1,10):" << algo->shortestPath(1,10) << endl;
-	algo3->shortestPath(sourceNodeId, destinationNodeId);
-	//cout << "sp(50096828,48432214):" << algo3->result << endl;
+	AStarBidirectionalBinaryHeap* algo3 = new AStarBidirectionalBinaryHeap(forwardNeighbour, backwardNeighbour, nodeStore, roadStore, array1, array2, array7, array1a, array2a, array7a);
+	algo3->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_DISTANCE);
+	// cout << algo2->result << endl;
+	algo3->reconstructPath(spDistance);
+	gettimeofday(&endSearch1, NULL);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO3)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heap_distance.csv", "/media/sf_ubuntu_shared_folder/algo3_closed_distance.csv", "/media/sf_ubuntu_shared_folder/algo3_sp_distance.csv", algo3);
+#endif
+#ifdef ALGO3
+	gettimeofday(&startSearch2, NULL);
+	algo3->shortestPath(sourceNodeId, destinationNodeId, SHORTESTPATH_TIME);
+	// cout << algo1->result << endl;
+	algo3->reconstructPath(spTime);
+#endif
+#if defined(_GISVISUALIZER_) && defined(ALGO3)
+	gisVisualizer.writeAStarBinaryHeap("/media/sf_ubuntu_shared_folder/algo3_heap_time.csv", "/media/sf_ubuntu_shared_folder/algo3_closed_time.csv", "/media/sf_ubuntu_shared_folder/algo3_sp_time.csv", algo3);
 #endif
 
 	gettimeofday(&endSearch2, NULL);
