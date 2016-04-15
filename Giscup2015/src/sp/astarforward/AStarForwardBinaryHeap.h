@@ -1,22 +1,30 @@
 /*
- * AStarBinaryHeap.h
+ * AStarForwardBinaryHeap.h
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #ifndef ASTARFORWARDBINARYHEAP_H_
 #define ASTARFORWARDBINARYHEAP_H_
 
+// _DEBUG_ for debugging the sp algorithm
 //#define _DEBUG_
+// _HEAPANALYSIS_ for watching what the algorithm does
 //#define _HEAPANALYSIS_
+// _HEAPSTATISTICS_ for collecting statistics during a shortest path search
 //#define _HEAPSTATISTICS_
 
 #include "AStarForwardShortestPath.h"
 #include "../ShortestPathAlgorithm.h"
-#include "../../datastructure/BinaryHeap.h"
+#include "../../datastructure/Heap.h"
 #include "../../data/NeighbourDataBase.h"
 
+/**
+ *
+ * Class implements the traditional A* shortest path algorithm
+ *
+ */
 class AStarForwardBinaryHeap : public ShortestPathAlgorithm {
 public:
 	int from;
@@ -24,7 +32,9 @@ public:
 	int result;
 
 	int* closed;
-	BinaryHeap<double>* heap;
+
+	Heap<double>* heap;
+
 	int* previous;
 	int* previousRoad;
 	double* gScore;
@@ -32,7 +42,7 @@ public:
 	NodeStore* nodeStore;
 	NeighbourDataBase* neighbourDataBase;
 
-	AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore, int* heapLookupTable, int* heapNodeArray, double* heapValueArray);
+	AStarForwardBinaryHeap(NeighbourDataBase* neighbourDataBase, NodeStore* nodeStore, RoadStore* roadStore, Heap<double>* heap);
 	~AStarForwardBinaryHeap();
 	void shortestPath(int fromId, int toId, int mode);
 	void reconstructPath(AStarForwardShortestPath* path);
