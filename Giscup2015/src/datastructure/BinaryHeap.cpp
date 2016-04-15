@@ -39,21 +39,21 @@ void BinaryHeap<T>::init(int sourceNode, T sourceValue) {
     this->valueArray[0] = sourceValue;
     this->nodeArray[0] = sourceNode;
     this->lookupTable[sourceNode] = 0;
-    size = 1;
+    this->size = 1;
 }
 
 template <class T>
 int BinaryHeap<T>::extractMin() {
-    if (size > 0) {
-        int minNode = nodeArray[0];
+    if (this->size > 0) {
+        int minNode = this->nodeArray[0];
 
-        if (size > 1) {
-            exchange(0, size - 1);
-            --size;
+        if (this->size > 1) {
+            exchange(0, this->size - 1);
+            --this->size;
             heapify(0);
         } else {
-            --size;
-            nodeArray[0] = -1;
+            --this->size;
+            this->nodeArray[0] = -1;
             valueArray[0] = this->maxValue;
         }
 
@@ -82,11 +82,11 @@ void BinaryHeap<T>::decreaseKey(int node, T value) {
 
 template <class T>
 void BinaryHeap<T>::insert(int node, T value) {
-    nodeArray[size] = node;
-    valueArray[size] = value;
-    lookupTable[node] = size;
-    heapify(size);
-    ++size;
+    this->nodeArray[this->size] = node;
+    valueArray[this->size] = value;
+    this->lookupTable[node] = this->size;
+    heapify(this->size);
+    ++this->size;
 }
 
 template <class T>
@@ -95,13 +95,13 @@ void BinaryHeap<T>::heapify(int i) {
     int r = l + 1;
 
     int largest = 0;
-    if (l < size && valueArray[l] < valueArray[i]) {
+    if (l < this->size && this->valueArray[l] < this->valueArray[i]) {
         largest = l;
     } else {
         largest = i;
     }
 
-    if (r < size && valueArray[r] < valueArray[largest]) {
+    if (r < this->size && this->valueArray[r] < this->valueArray[largest]) {
         largest = r;
     }
 
@@ -113,13 +113,13 @@ void BinaryHeap<T>::heapify(int i) {
 
 template <class T>
 void BinaryHeap<T>::exchange(int i, int j) {
-    int tempLookUp = lookupTable[nodeArray[i]];
-    lookupTable[nodeArray[i]] = lookupTable[nodeArray[j]];
-    lookupTable[nodeArray[j]] = tempLookUp;
+    int tempLookUp = this->lookupTable[this->nodeArray[i]];
+    this->lookupTable[this->nodeArray[i]] = this->lookupTable[this->nodeArray[j]];
+    this->lookupTable[this->nodeArray[j]] = tempLookUp;
 
-    int tempNode = nodeArray[i];
-    nodeArray[i] = nodeArray[j];
-    nodeArray[j] = tempNode;
+    int tempNode = this->nodeArray[i];
+    this->nodeArray[i] = this->nodeArray[j];
+    this->nodeArray[j] = tempNode;
 
     T tempValue = valueArray[i];
     valueArray[i] = valueArray[j];

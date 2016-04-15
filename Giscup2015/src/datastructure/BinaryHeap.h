@@ -9,6 +9,8 @@
 #ifndef BINARYHEAP_H_
 #define BINARYHEAP_H_
 
+#include "Heap.h"
+
 /**
  * Class contains a generic binary heap.
  *
@@ -16,15 +18,12 @@
  *
  */
 template <class T>
-class BinaryHeap {
+class BinaryHeap : public Heap<T> {
 public:
 	T zeroValue;
 	T maxValue;
-	int size;
 	int heapSize;
-	int* lookupTable;
 	T* valueArray;
-	int* nodeArray;
 	BinaryHeap(int initialSize, T zeroValue, T maxValue, int* heapLookupTable, int* heapNodeArray, T* heapValueArray);
 	~BinaryHeap();
 	void init(int sourceNode, T sourceValue);
