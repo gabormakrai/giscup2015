@@ -1,8 +1,8 @@
 /*
- * AStarBinaryHeap.cpp
+ * AStarBidirectionalBinaryHeap.cpp
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #include "AStarBidirectionalBinaryHeap.h"
@@ -99,6 +99,10 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId, int mode) 
 	int avgBackwardHeapSize = 0;
 #endif
 
+#ifdef _HEAPANALYSIS_
+	int heapIteration = 0;
+#endif
+
 	while (forwardHeap->size + backwardHeap->size > 0) {
 
 		// FORWARD STEP
@@ -116,6 +120,9 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId, int mode) 
 			cout << "forwardStep: forwardCurrent: " << forwardCurrent << endl;
 #endif
 
+#ifdef _HEAPANALYSIS_
+		cout<<"iterationForward:"<<(heapIteration++)<<",forwardHeapSize:"<<forwardHeap->size<<",currentNode:"<<forwardCurrent<<",toNode:"<<to<<endl;
+#endif
 		if (closed[forwardCurrent] == 1) {
 			this->meetingNode = forwardCurrent;
 
@@ -159,6 +166,10 @@ void AStarBidirectionalBinaryHeap::shortestPath(int fromId, int toId, int mode) 
 
 #ifdef _DEBUG_
 			cout << "backwardStep: backwardCurrent: " << backwardCurrent << endl;
+#endif
+
+#ifdef _HEAPANALYSIS_
+		cout<<"iterationBackward:"<<(heapIteration)<<",backwardHeapSize:"<<backwardHeap->size<<",currentNode:"<<backwardCurrent<<",toNode:"<<to<<endl;
 #endif
 
 		if (closed[backwardCurrent] == 1) {
@@ -239,22 +250,3 @@ void AStarBidirectionalBinaryHeap::reconstructPath(AStarBidirectionalShortestPat
 	path->lastRoadAdded();
 }
 
-/*
-void AStarBackwardBinaryHeap::reconstructPath(AStarBackwardShortestPath* path) {
-
-	int currentNode = from;
-
-	while (true) {
-
-		path->addRoad(nextRoad[currentNode]);
-
-		currentNode = next[currentNode];
-
-		if (currentNode == to) {
-			break;
-		}
-	}
-
-	path->lastRoadAdded();
-}
-*/

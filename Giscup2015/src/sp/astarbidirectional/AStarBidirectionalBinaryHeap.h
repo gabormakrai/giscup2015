@@ -1,15 +1,18 @@
 /*
- * AStarBinaryHeap.h
+ * AStarBidirectionalBinaryHeap.h
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *  Author: Gabor Makrai
  */
 
 #ifndef ASTARBIDIRECTIONALBINARYHEAP_H_
 #define ASTARBIDIRECTIONALBINARYHEAP_H_
 
+// _DEBUG_ for debugging the sp algorithm
 //#define _DEBUG_
+// _HEAPANALYSIS_ for watching what the algorithm does
 //#define _HEAPANALYSIS_
+// _HEAPSTATISTICS_ for collecting statistics during a shortest path search
 //#define _HEAPSTATISTICS_
 
 #include "../ShortestPathAlgorithm.h"
@@ -17,6 +20,11 @@
 #include "../../data/NeighbourDataBase.h"
 #include "AStarBidirectionalShortestPath.h"
 
+/**
+ *
+ * Class implements the bidirectional A* shortest path algorithm
+ *
+ */
 class AStarBidirectionalBinaryHeap : public ShortestPathAlgorithm {
 public:
 	int from;
