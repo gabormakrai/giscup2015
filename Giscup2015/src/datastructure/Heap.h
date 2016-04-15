@@ -1,8 +1,8 @@
 /*
- * ShortestPathAlgorithm.h
+ * Heap.h
  *
  *  Created on: 18 Aug 2015
- *      Author: makrai
+ *      Author: Gabor Makrai
  */
 
 #ifndef _HEAP_H_
