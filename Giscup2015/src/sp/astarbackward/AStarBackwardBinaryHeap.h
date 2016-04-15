@@ -1,5 +1,5 @@
 /*
- * AStarBinaryHeap.h
+ * AStarBackwardBinaryHeap.h
  *
  *  Created on: 18 Aug 2015
  *  Author: Gabor Makrai
